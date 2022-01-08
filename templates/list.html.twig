@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    <style>
+        .align-center {
+            margin: 0 auto;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+    <div class="row">
+        <div class="col-lg-8 align-center">
+            <h1>Blogs</h1>
+            <table class="table table-striped ">
+                <thead class="thead-dark">
+
+                <tr>
+                    <th>Title</th>
+                    <th>Short description</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for blog in blogs %}
+                    <tr>
+                        <td>{{ blog.title }}</td>
+                        <td>{{ blog.shortDescription }}</td>
+                        <td>
+                            <button class="btn btn-primary">Edit</button>
+                            <button class="btn btn-danger">Delete</button>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+
+{% endblock %}
