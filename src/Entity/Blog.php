@@ -33,9 +33,9 @@ class Blog
     private $title;
 
     /**
-     * @ORM\Column(type="string", length=40)
+     * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
-     * @Assert\Length(max=40)
+     * @Assert\Length(max=255)
      */
     private $short_description;
 
