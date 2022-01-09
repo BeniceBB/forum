@@ -1,40 +1,67 @@
 {% extends 'base.html.twig' %}
-{% block stylesheets %}
-    <style>
-        .align-center {
-            margin: 0 auto;
-        }
-    </style>
-{% endblock %}
+
 {% block body %}
+    <div class="header"></div>
+    <div class="col-lg-8 align-center header-title">
+        <h1>Posts</h1>
+    </div>
+    <div class="custom-container">
     <div class="row">
-        <div class="col-lg-8 align-center">
-            <h1>Blogs</h1>
+        <div class="col-lg-10 align-center">
+            <div class="row">
+                <div class="col-lg-3">
+                    <a href="{{ path('app_main_createblog') }}" class="btn btn-dark">Create post</a>
+
+                </div>
+                <div class="col-lg-4">
+                <a href="{{ path('app_main_createauthor') }}" class="btn btn-dark">Create author</a>
+                </div>
+                <br>
+            </div>
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="flash-{{ label }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
             <table class="table table-striped ">
                 <thead class="thead-dark">
 
                 <tr>
                     <th>Title</th>
                     <th>Short description</th>
+                    <th>Author</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for blog in blogs %}
                     <tr>
-                        <td>{{ blog.title }}</td>
+
+                        <td><a href="{{ path('app_main_editblog', {id: blog.id}) }}" style="cursor:pointer">{{ blog.title }}</a></td>
                         <td>{{ blog.shortDescription }}</td>
                         <td>
-                            <button class="btn btn-primary">Edit</button>
-                            <button class="btn btn-danger">Delete</button>
+                            <a href="{{ path('app_main_editauthor', {id: blog.authorID}) }}">
+
+                                    {{ blog.authorID }}
+
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{{ path('app_blog_delete', {id: blog.id}) }}" onclick="return confirm('Are you sure?');">Delete</a>
                         </td>
                     </tr>
+
                 {% endfor %}
                 </tbody>
             </table>
 
         </div>
     </div>
+    </div>
+
+
 
 
 {% endblock %}

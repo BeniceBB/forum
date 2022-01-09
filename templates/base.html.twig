@@ -9,6 +9,53 @@
         {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
         {% block stylesheets %}
             {{ encore_entry_link_tags('app') }}
+            <style>
+                body{
+                    font-family: 'Open Sans', sans-serif;
+                }
+                .btn, .back-btn {
+                    margin-bottom: 20px;
+                    margin-top: 10px;
+                }
+                .align-center{
+                    margin: 0 auto;
+                }
+                .header{
+                    width: 100vw;
+                    background-color: #09162b;
+                    transform: skewY(-5deg);
+                    margin-top: -70px;
+                    margin-bottom: -100px;
+                    height: 250px;
+                    padding-bottom: 50px;
+                }
+
+                .header-title{
+                    color: white;
+                    font-family: 'Raleway';
+                    font-weight: 800 !important;
+                }
+
+                .custom-container{
+                    background-color: whitesmoke !important;
+                    z-index: 99999999999;
+                    position: absolute;
+                    width: 70%;
+                    margin-left: 15%;
+                    margin-top: 30px;
+                    box-shadow: 10px 10px 10px grey;
+                    border-radius: 30px;
+                    padding: 50px 0px;
+                }
+
+                .btn-dark, .table .thead-dark th{
+                    background-color: #09162b;
+                }
+
+                label{
+                    font-weight: bold;
+                }
+            </style>
         {% endblock %}
 
         {% block javascripts %}

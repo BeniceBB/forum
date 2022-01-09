@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
+
 /**
  * @ORM\Entity(repositoryClass="App\Repository\BlogRepository")
  */
@@ -16,6 +17,13 @@ class Blog
      * @ORM\Column(type="integer")
      */
     private $id;
+
+    /**
+     * @ORM\Column(type="integer", length=11)
+     * @Assert\NotBlank()
+     * @Assert\Length(max=11)
+     */
+    private $authorID;
 
     /**
      * @ORM\Column(type="string", length=40)
@@ -84,15 +92,27 @@ class Blog
         return $this;
     }
 
-    public function getImage()
+    public function getAuthorId(): ?int
     {
-        return $this->image;
+        return $this->authorID;
     }
 
-    public function setImage($image): self
+    public function setAuthorId(int $authorID): self
     {
-        $this->image = $image;
+        $this->authorID = $authorID;
 
         return $this;
     }
+
+//    public function getImage()
+//    {
+//        return $this->image;
+//    }
+//
+//    public function setImage($image): self
+//    {
+//        $this->image = $image;
+//
+//        return $this;
+//    }
 }

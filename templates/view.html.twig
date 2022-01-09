@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="header"></div>
+    <div class="col-lg-8 align-center header-title">
+        <h1>  {{ title }}</h1>
+    </div>
+    <div class="custom-container">
+    <div class="row">
+        <div class="col-lg-10 align-center">
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="flash-{{ label }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+            {{ body }}
+            <br><br>
+            Auteur:<a href="{{ path('app_main_editauthor', {id: author}) }}">  {{ author }}</a><br>
+{#            {{ form_start(form) }}#}
+
+{#            <div class="form-group">#}
+{#                {{ form_widget(form.title) }}#}
+{#            </div>#}
+{#            <div class="form-group">#}
+{#                {{ form_widget(form.shortDescription) }}#}
+{#            </div>#}
+{#            <div class="form-group">#}
+{#                {{ form_widget(form.authorID) }}#}
+{#            </div>#}
+{#            #}{#        <div class="form-group">#}
+{#            #}{#            {{ form_widget(form.imageFile) }}#}
+{#            #}{#        </div>#}
+{#            <div class="form-group">#}
+{#                {{ form_widget(form.body) }}#}
+{#            </div>#}
+{#            <a href="{{ path('app_main_index') }}">Back to overview</a>#}
+
+{#            {{ form_end(form) }}#}
+            <a href="{{ path('app_main_index') }}">Back to overview</a>
+        </div>
+    </div>
+    </div>
+{% endblock %}

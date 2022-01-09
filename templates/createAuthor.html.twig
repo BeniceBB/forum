@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="header"></div>
+    <div class="col-lg-8 align-center header-title">
+        <h1>New author</h1>
+    </div>
+    <div class="custom-container">
+    <div class="row">
+        <div class="col-lg-10 align-center">
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="flash-{{ label }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+            {{ form_start(form) }}
+            <div class="form-group">
+                <label>Name</label>
+                {{ form_widget(form.name) }}
+            </div>
+
+            <input type="submit" class="btn btn-dark"/>
+            <a href="{{ path('app_main_index') }}">Back to overview</a>
+
+            {{ form_end(form) }}
+        </div>
+    </div>
+    </div>
+{% endblock %}
