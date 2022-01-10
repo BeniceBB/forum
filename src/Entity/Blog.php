@@ -19,11 +19,10 @@ class Blog
     private $id;
 
     /**
-     * @ORM\Column(type="integer", length=11)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Author")
      * @Assert\NotBlank()
-     * @Assert\Length(max=11)
      */
-    private $authorID;
+    private $author;
 
     /**
      * @ORM\Column(type="string", length=40)
@@ -92,14 +91,14 @@ class Blog
         return $this;
     }
 
-    public function getAuthorId(): ?int
+    public function getAuthor(): ?Author
     {
-        return $this->authorID;
+        return $this->author;
     }
 
-    public function setAuthorId(int $authorID): self
+    public function setAuthor(Author $author): self
     {
-        $this->authorID = $authorID;
+        $this->author = $author;
 
         return $this;
     }

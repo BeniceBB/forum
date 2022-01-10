@@ -31,7 +31,9 @@ class MainController extends AbstractController
      */
     public function index(BlogRepository $blogRepository, AuthorRepository $authorRepository)
     {
-        return $this->render('list.html.twig', ['blogs' => $blogRepository->findAll(), 'authors' => $authorRepository->findAll()]);
+//        dump($blogRepository->findAll()[0]->getAuthor());
+//        exit;
+        return $this->render('list.html.twig', ['blogs' => $blogRepository->findAll()]);
     }
 
     /**

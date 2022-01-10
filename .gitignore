@@ -18,3 +18,9 @@
 /phpunit.xml
 .phpunit.result.cache
 ###< phpunit/phpunit ###
+
+build/mysql/mysql/
+build/mysql/
+10:19
+#### phpstorm ####
+.idea/
