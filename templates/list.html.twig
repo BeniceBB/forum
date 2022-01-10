@@ -39,10 +39,10 @@
                 {% for blog in blogs %}
                     <tr>
 
-                        <td><a href="{{ path('app_main_editblog', {id: blog.id}) }}" style="cursor:pointer">{{ blog.title }}</a></td>
+                        <td><a href="{{ path('app_main_viewblog', {id: blog.id}) }}" style="cursor:pointer">{{ blog.title }}</a></td>
                         <td>{{ blog.shortDescription }}</td>
                         <td>
-                            <a href="{{ path('app_main_editauthor', {id: blog.author.id}) }}">
+                            <a href="{{ path('app_main_viewauthor', {id: blog.author.id}) }}">
                                     {{ blog.author.name }}
                             </a>
                         </td>

@@ -2,7 +2,9 @@
 
 namespace App\Form\Type;
 
+use App\Entity\Author;
 use App\Entity\Blog;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -19,7 +21,8 @@ class BlogFormType extends AbstractType
         $builder->add('title', TextType::class, ['attr' => ['class' => 'form-control']]);
         $builder->add('shortDescription', TextType::class, ['attr' => ['class' => 'form-control']]);
         $builder->add('body', TextareaType::class, ['attr' => ['class' => 'form-control']]);
-        $builder->add('authorID', NumberType::class, ['attr' => ['class' => 'form-control']]);
+        $builder->add('author', EntityType::class, ['class' => Author::class, 'choice_label' => 'name']);
+//        $builder->add('author', AuthorFormType::class);
 //        $builder->add('imageFile', FileType::class, [
 //            'attr'     => ['class' => 'form-control',],
 //            'mapped' => false,

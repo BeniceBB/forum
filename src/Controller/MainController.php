@@ -18,6 +18,7 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Form\FormBuilderInterface;
 
 class MainController extends AbstractController
 {
@@ -85,9 +86,9 @@ class MainController extends AbstractController
      *
      * @return Response
      */
-    public function editBlog(Blog $blog, Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger)
+    public function viewBlog(Blog $blog, Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger)
     {
-        $form = $this->createForm(BlogFormType::class, $blog);
+//        $form = $this->createForm(BlogFormType::class, $blog);
 
 //        $form->handleRequest($request);
 //        if ($form->isSubmitted() && $form->isValid()) {
@@ -99,10 +100,10 @@ class MainController extends AbstractController
 //        }
 
         return $this->render('view.html.twig', [
-            'form' => $form->createView(),
+//            'form' => $form->createView(),
             'title' => $blog->getTitle(),
             'body' => $blog->getBody(),
-            'author' => $blog->getAuthorId(),
+            'author' => $blog->getAuthor(),
         ]);
     }
 
@@ -140,7 +141,7 @@ class MainController extends AbstractController
      *
      * @return Response
      */
-    public function editAuthor(Author $author, Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger)
+    public function viewAuthor(Author $author, Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger)
     {
         $form = $this->createForm(AuthorFormType::class, $author);
 //
