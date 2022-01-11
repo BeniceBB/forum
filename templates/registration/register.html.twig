@@ -3,15 +3,25 @@
 {% block title %}Register{% endblock %}
 
 {% block body %}
-    <h1>Register</h1>
+<div class="header"></div>
+<div class="col-lg-8 align-center header-title">
+    <h1>New author</h1>
+</div>
+<div class="custom-container">
+    <div class="row">
+        <div class="col-lg-10 align-center">
+            {{ form_start(registrationForm) }}
+            <div class="form-group">
+                {{ form_row(registrationForm.username) }}
+            </div>
+                {{ form_row(registrationForm.plainPassword, {
+                    label: 'Password'
+                }) }}
+                {{ form_row(registrationForm.agreeTerms) }}
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.username) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
-
-        <button type="submit" class="btn">Register</button>
+        <button type="submit" class="btn btn-dark">Register</button>
     {{ form_end(registrationForm) }}
+        </div>
+    </div>
+</div>
 {% endblock %}
