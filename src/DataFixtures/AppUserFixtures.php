@@ -13,7 +13,7 @@ class AppUserFixtures extends Fixture
     public function load(ObjectManager $manager)
     {
         $user = new User();
-        $user->setName('Admin');
+        $user->setUsername('Admin');
         $manager->persist($user);
 
         $this->setReference(self::USER_FIXTURE, $user);

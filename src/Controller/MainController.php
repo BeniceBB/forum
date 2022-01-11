@@ -47,12 +47,25 @@ class MainController extends AbstractController
      */
     public function createBlog(Request $request, EntityManagerInterface $entityManager)
     {
+        $user = $this->getUser();
+//        dump($user);
+//        exit;
+//        $user_id = $user->getId();
+
         if (!$this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY'))
         {
             $form = $this->createForm(BlogFormType::class, new Blog());
             $form->handleRequest($request);
+
+            $blog = $form->getData();
+            $blog->setId('20');
+            $blog->setUser($user);
+
+//            dump($form);
+//            exit;
+
             if ($form->isSubmitted() && $form->isValid()) {
-                $blog = $form->getData();
+
                 $entityManager->persist($blog);
                 $entityManager->flush();
                 $this->addFlash('success', 'Post was created!');
@@ -60,7 +73,7 @@ class MainController extends AbstractController
             }
 
             return $this->render('create.html.twig', [
-                'form' => $form->createView()
+                'form' => $form->createView(),
             ]);
         }
         else {
