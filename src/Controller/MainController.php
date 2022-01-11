@@ -47,20 +47,26 @@ class MainController extends AbstractController
      */
     public function createBlog(Request $request, EntityManagerInterface $entityManager)
     {
-        $form = $this->createForm(BlogFormType::class, new Blog());
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $blog = $form->getData();
-            $entityManager->persist($blog);
-            $entityManager->flush();
-            $this->addFlash('success', 'Post was created!');
+        if (!$this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY'))
+        {
+            $form = $this->createForm(BlogFormType::class, new Blog());
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                $blog = $form->getData();
+                $entityManager->persist($blog);
+                $entityManager->flush();
+                $this->addFlash('success', 'Post was created!');
+                return $this->redirectToRoute('app_main_index');
+            }
+
+            return $this->render('create.html.twig', [
+                'form' => $form->createView()
+            ]);
+        }
+        else {
             return $this->redirectToRoute('app_main_index');
         }
 
-
-        return $this->render('create.html.twig', [
-            'form' => $form->createView()
-        ]);
     }
 
     /**
@@ -73,10 +79,11 @@ class MainController extends AbstractController
      */
     public function deleteBlog(Blog $blog, EntityManagerInterface $em): RedirectResponse
     {
-        $em->remove($blog);
-        $em->flush();
-        $this->addFlash('success', 'Post is deleted!');
-
+        if (!$this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY')) {
+            $em->remove($blog);
+            $em->flush();
+            $this->addFlash('success', 'Post is deleted!');
+        }
         return $this->redirectToRoute('app_main_index');
     }
 
@@ -108,32 +115,6 @@ class MainController extends AbstractController
         ]);
     }
 
-    // Users:
-
-//    /**
-//     * @Route("/createAuthor")
-//     *
-//     * @param Request $request
-//     *
-//     * @return Response
-//     */
-//    public function createAuthor(Request $request, EntityManagerInterface $entityManager)
-//    {
-//        $form = $this->createForm(AuthorFormType::class, new Author());
-//        $form->handleRequest($request);
-//        if ($form->isSubmitted() && $form->isValid()) {
-//            $author = $form->getData();
-//            $entityManager->persist($author);
-//            $entityManager->flush();
-//            $this->addFlash('success', 'Author was created!');
-//            return $this->redirectToRoute('app_main_index');
-//        }
-//
-//
-//        return $this->render('createAuthor.html.twig', [
-//            'form' => $form->createView()
-//        ]);
-//    }
 
     /**
      * @Route("/viewUser/{id}")
@@ -145,15 +126,6 @@ class MainController extends AbstractController
     public function viewUser(User $user, Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger)
     {
         $form = $this->createForm(UserFormType::class, $user);
-//
-//        $form->handleRequest($request);
-//        if ($form->isSubmitted() && $form->isValid()) {
-//            $author      = $form->getData();
-//
-//            $entityManager->persist($author);
-//            $entityManager->flush();
-//            $this->addFlash('success', 'Author was edited!');
-//        }
 
         return $this->render('viewUser.html.twig', [
             'form' => $form->createView(),
