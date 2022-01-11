@@ -46,4 +46,3 @@ services:
       MYSQL_USERNAME: root
       MYSQL_ROOT_PASSWORD: docker
       PMA_HOST: mysql
-
