@@ -42,8 +42,8 @@
                         <td><a href="{{ path('app_main_viewblog', {id: blog.id}) }}" style="cursor:pointer">{{ blog.title }}</a></td>
                         <td>{{ blog.shortDescription }}</td>
                         <td>
-                            <a href="{{ path('app_main_viewauthor', {id: blog.author.id}) }}">
-                                    {{ blog.author.name }}
+                            <a href="{{ path('app_main_viewuser', {id: blog.user.id}) }}">
+                                    {{ blog.user.username }}
                             </a>
                         </td>
                         <td>

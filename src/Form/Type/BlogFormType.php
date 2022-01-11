@@ -2,7 +2,7 @@
 
 namespace App\Form\Type;
 
-use App\Entity\Author;
+use App\Entity\User;
 use App\Entity\Blog;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -21,7 +21,8 @@ class BlogFormType extends AbstractType
         $builder->add('title', TextType::class, ['attr' => ['class' => 'form-control']]);
         $builder->add('shortDescription', TextType::class, ['attr' => ['class' => 'form-control']]);
         $builder->add('body', TextareaType::class, ['attr' => ['class' => 'form-control']]);
-        $builder->add('author', EntityType::class, ['class' => Author::class, 'choice_label' => 'name']);
+        $builder->add('user', EntityType::class, ['class' => User::class, 'choice_label' => 'username']);
+
 //        $builder->add('author', AuthorFormType::class);
 //        $builder->add('imageFile', FileType::class, [
 //            'attr'     => ['class' => 'form-control',],

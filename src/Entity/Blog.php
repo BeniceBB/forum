@@ -19,10 +19,10 @@ class Blog
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Author")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User")
      * @Assert\NotBlank()
      */
-    private $author;
+    private $user;
 
     /**
      * @ORM\Column(type="string", length=40)
@@ -91,14 +91,14 @@ class Blog
         return $this;
     }
 
-    public function getAuthor(): ?Author
+    public function getUser(): ?User
     {
-        return $this->author;
+        return $this->user;
     }
 
-    public function setAuthor(Author $author): self
+    public function setUser(User $user): self
     {
-        $this->author = $author;
+        $this->user = $user;
 
         return $this;
     }

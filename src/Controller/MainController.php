@@ -4,10 +4,11 @@ namespace App\Controller;
 
 use App\Entity\Blog;
 use App\Entity\Author;
+use App\Entity\User;
 use App\Form\Type\BlogFormType;
-use App\Form\Type\AuthorFormType;
+use App\Form\Type\UserFormType;
 use App\Repository\BlogRepository;
-use App\Repository\AuthorRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -26,13 +27,13 @@ class MainController extends AbstractController
      * @Route("/")
      *
      * @param BlogRepository $blogRepository
-     * @param AuthorRepository $authorRepository
+     * @param UserRepository $userRepository
      *
      * @return Response
      */
-    public function index(BlogRepository $blogRepository, AuthorRepository $authorRepository)
+    public function index(BlogRepository $blogRepository, userRepository $userRepository)
     {
-//        dump($blogRepository->findAll()[0]->getAuthor());
+//        dump($blogRepository->findAll()[0]->getUser());
 //        exit;
         return $this->render('list.html.twig', ['blogs' => $blogRepository->findAll()]);
     }
@@ -103,47 +104,47 @@ class MainController extends AbstractController
 //            'form' => $form->createView(),
             'title' => $blog->getTitle(),
             'body' => $blog->getBody(),
-            'author' => $blog->getAuthor(),
+            'user' => $blog->getUser(),
         ]);
     }
 
-    // Authors:
+    // Users:
+
+//    /**
+//     * @Route("/createAuthor")
+//     *
+//     * @param Request $request
+//     *
+//     * @return Response
+//     */
+//    public function createAuthor(Request $request, EntityManagerInterface $entityManager)
+//    {
+//        $form = $this->createForm(AuthorFormType::class, new Author());
+//        $form->handleRequest($request);
+//        if ($form->isSubmitted() && $form->isValid()) {
+//            $author = $form->getData();
+//            $entityManager->persist($author);
+//            $entityManager->flush();
+//            $this->addFlash('success', 'Author was created!');
+//            return $this->redirectToRoute('app_main_index');
+//        }
+//
+//
+//        return $this->render('createAuthor.html.twig', [
+//            'form' => $form->createView()
+//        ]);
+//    }
 
     /**
-     * @Route("/createAuthor")
+     * @Route("/viewUser/{id}")
      *
-     * @param Request $request
+     * @ParamConverter("user", class="App:User")
      *
      * @return Response
      */
-    public function createAuthor(Request $request, EntityManagerInterface $entityManager)
+    public function viewUser(User $user, Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger)
     {
-        $form = $this->createForm(AuthorFormType::class, new Author());
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $author = $form->getData();
-            $entityManager->persist($author);
-            $entityManager->flush();
-            $this->addFlash('success', 'Author was created!');
-            return $this->redirectToRoute('app_main_index');
-        }
-
-
-        return $this->render('createAuthor.html.twig', [
-            'form' => $form->createView()
-        ]);
-    }
-
-    /**
-     * @Route("/viewAuthor/{id}")
-     *
-     * @ParamConverter("author", class="App:Author")
-     *
-     * @return Response
-     */
-    public function viewAuthor(Author $author, Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger)
-    {
-        $form = $this->createForm(AuthorFormType::class, $author);
+        $form = $this->createForm(UserFormType::class, $user);
 //
 //        $form->handleRequest($request);
 //        if ($form->isSubmitted() && $form->isValid()) {
@@ -154,10 +155,10 @@ class MainController extends AbstractController
 //            $this->addFlash('success', 'Author was edited!');
 //        }
 
-        return $this->render('viewAuthor.html.twig', [
+        return $this->render('viewUser.html.twig', [
             'form' => $form->createView(),
-            'name' => $author->getName(),
-            'id' => $author->getId(),
+            'username' => $user->getUsername(),
+            'id' => $user->getId(),
         ]);
     }
 }
