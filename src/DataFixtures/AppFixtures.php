@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Blog;
+use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;

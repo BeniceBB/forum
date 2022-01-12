@@ -52,12 +52,10 @@ class MainController extends AbstractController
 //        exit;
 //        $user_id = $user->getId();
 
-        if (!$this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY'))
-        {
+        if (!$this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY')) {
             $blog = new Blog();
             $form = $this->createForm(BlogFormType::class, $blog);
             $form->handleRequest($request);
-
 
 
 //           dump($form->isValid());
@@ -73,8 +71,7 @@ class MainController extends AbstractController
             return $this->render('create.html.twig', [
                 'form' => $form->createView(),
             ]);
-        }
-        else {
+        } else {
             return $this->redirectToRoute('app_main_index');
         }
 
@@ -83,7 +80,7 @@ class MainController extends AbstractController
     /**
      * @Route("/delete/{id}", name="app_blog_delete")
      *
-     * @param Blog                   $blog
+     * @param Blog $blog
      * @param EntityManagerInterface $em
      *
      * @return RedirectResponse

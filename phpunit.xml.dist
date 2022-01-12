@@ -15,11 +15,12 @@
         <server name="SHELL_VERBOSITY" value="-1" />
         <server name="SYMFONY_PHPUNIT_REMOVE" value="" />
         <server name="SYMFONY_PHPUNIT_VERSION" value="9.5" />
+        <env name="DATABASE_URL" value="mysql://root@127.0.0.1:3306/form_test/"/>
     </php>
 
     <testsuites>
         <testsuite name="Project Test Suite">
-            <directory>tests</directory>
+            <directory>tests</directory>phpunit.xml.dist
         </testsuite>
     </testsuites>
 
