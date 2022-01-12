@@ -54,18 +54,16 @@ class MainController extends AbstractController
 
         if (!$this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY'))
         {
-            $form = $this->createForm(BlogFormType::class, new Blog());
+            $blog = new Blog();
+            $form = $this->createForm(BlogFormType::class, $blog);
             $form->handleRequest($request);
 
-            $blog = $form->getData();
-            $blog->setId('20');
-            $blog->setUser($user);
 
-//            dump($form);
-//            exit;
 
+//           dump($form->isValid());
+//          exit;
             if ($form->isSubmitted() && $form->isValid()) {
-
+                $blog->setUser($user);
                 $entityManager->persist($blog);
                 $entityManager->flush();
                 $this->addFlash('success', 'Post was created!');

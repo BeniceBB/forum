@@ -3,7 +3,6 @@
 namespace App\DataFixtures;
 
 use App\Entity\Blog;
-use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -33,7 +32,7 @@ class AppFixtures extends Fixture implements DependentFixtureInterface
     public function getDependencies()
     {
         return [
-            AppUserixtures::class,
+            AppUserFixtures::class,
         ];
     }
 }

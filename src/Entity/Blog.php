@@ -20,7 +20,6 @@ class Blog
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
-     * @Assert\NotBlank()
      */
     private $user;
 

@@ -14,6 +14,7 @@ class AppUserFixtures extends Fixture
     {
         $user = new User();
         $user->setUsername('Admin');
+        $user->setPassword('mypassword');
         $manager->persist($user);
 
         $this->setReference(self::USER_FIXTURE, $user);
