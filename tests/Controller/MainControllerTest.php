@@ -5,6 +5,7 @@ namespace App\Tests\Controller;
 use App\Repository\BlogRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class MainControllerTest extends WebTestCase
 {
@@ -29,7 +30,8 @@ class MainControllerTest extends WebTestCase
         $client = static::createClient();
         $client->request('GET', '/');
         $client->clickLink('Delete');
-        $this->assertEquals(302, $client->getResponse()->getStatusCode());
+        $client->followRedirect();
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
     }
 
     public function testDeleteLinkAuthenticated(): void
@@ -42,7 +44,8 @@ class MainControllerTest extends WebTestCase
 
         $client->request('GET', '/');
         $client->clickLink('Delete');
-        $this->assertResponseIsSuccessful('', $client->getResponse()->getStatusCode());
+        $client->followRedirect();
+        $this->assertStringContainsString('Post is deleted', $client->getResponse()->getContent());
     }
 
     public function testView(): void
@@ -50,7 +53,7 @@ class MainControllerTest extends WebTestCase
         $client = static::createClient();
         $client->request('GET', '/view/1');
         self::assertPageTitleSame('Post', $client->getCrawler()->innerText());
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $client->getResponse()->getStatusCode());
     }
 
     public function testViewUser(): void

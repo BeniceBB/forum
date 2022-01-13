@@ -33,17 +33,4 @@ class BlogFormTypeTest extends TypeTestCase
         $this->assertEquals($expected, $model);
     }
 
-    public function testCustomFormView()
-    {
-        $formData = new Blog();
-        // ... prepare the data as you need
-
-        // The initial data may be used to compute custom view variables
-        $view = $this->factory->create(BlogFormType::class, $formData)
-            ->createView();
-
-        $this->assertArrayHasKey('', $view->vars);
-        $this->assertSame('expected value', $view->vars['body']);
-    }
-
 }
