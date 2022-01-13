@@ -2,37 +2,71 @@
 
 namespace App\Tests\Controller;
 
-use App\DataFixtures\AppFixtures;
-use App\DataFixtures\AppUserFixtures;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class MainControllerTest extends WebTestCase
 {
 
-    public function testView()
+    public function testIndex(): void
     {
         $client = static::createClient();
-        $client->request('GET', '/view/1');
-        $this->assertPageTitleSame('Post', $client->getCrawler()->innerText());
+        $client->request('GET', '/');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
     }
 
-    public function testButtonBlogList()
+    public function testButtonIndex(): void
     {
         $client = static::createClient();
-        $client->request('Get', '/');
+        $client->request('GET', '/');
         $client->clickLink('Create post');
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
     }
 
-    public function testCreateNotLoggedIn()
+    public function testDeleteLink(): void
+    {
+        $client = static::createClient();
+        $client->request('GET', '/');
+        $client->clickLink('Delete');
+        $this->assertEquals(302, $client->getResponse()->getStatusCode());
+    }
+
+    public function testDeleteLinkAuthenticated(): void
+    {
+        $client = static::createClient();
+
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $testUser = $userRepository->findOneByUsername('Admin');
+        $client->loginUser($testUser);
+
+        $client->request('GET', '/');
+        $client->clickLink('Delete');
+        $this->assertResponseIsSuccessful('', $client->getResponse()->getStatusCode());
+    }
+
+    public function testView(): void
+    {
+        $client = static::createClient();
+        $client->request('GET', '/view/1');
+        self::assertPageTitleSame('Post', $client->getCrawler()->innerText());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+    }
+
+    public function testViewUser(): void
+    {
+        $client = static::createClient();
+        $client->request('GET', '/viewUser/1');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+    }
+
+    public function testCreate(): void
     {
         $client = static::createClient();
         $client->request('GET', '/create');
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
     }
 
-    public function testCreateLoggedIn()
+    public function testCreateAuthenticated(): void
     {
         $client = static::createClient();
 
@@ -43,4 +77,5 @@ class MainControllerTest extends WebTestCase
         $client->request('GET', '/create');
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
     }
+
 }

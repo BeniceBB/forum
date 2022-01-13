@@ -33,8 +33,6 @@ class MainController extends AbstractController
      */
     public function index(BlogRepository $blogRepository, userRepository $userRepository)
     {
-//        dump($blogRepository->findAll()[0]->getUser());
-//        exit;
         return $this->render('list.html.twig', ['blogs' => $blogRepository->findAll()]);
     }
 
@@ -48,18 +46,12 @@ class MainController extends AbstractController
     public function createBlog(Request $request, EntityManagerInterface $entityManager)
     {
         $user = $this->getUser();
-//        dump($user);
-//        exit;
-//        $user_id = $user->getId();
 
         if (!$this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY')) {
             $blog = new Blog();
             $form = $this->createForm(BlogFormType::class, $blog);
             $form->handleRequest($request);
 
-
-//           dump($form->isValid());
-//          exit;
             if ($form->isSubmitted() && $form->isValid()) {
                 $blog->setUser($user);
                 $entityManager->persist($blog);
@@ -74,7 +66,6 @@ class MainController extends AbstractController
         } else {
             return $this->redirectToRoute('app_main_index');
         }
-
     }
 
     /**
@@ -104,19 +95,7 @@ class MainController extends AbstractController
      */
     public function viewBlog(Blog $blog, Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger)
     {
-//        $form = $this->createForm(BlogFormType::class, $blog);
-
-//        $form->handleRequest($request);
-//        if ($form->isSubmitted() && $form->isValid()) {
-//            $blog      = $form->getData();
-//
-//            $entityManager->persist($blog);
-//            $entityManager->flush();
-//            $this->addFlash('success', 'Post was edited!');
-//        }
-
         return $this->render('view.html.twig', [
-//            'form' => $form->createView(),
             'title' => $blog->getTitle(),
             'body' => $blog->getBody(),
             'user' => $blog->getUser(),
