@@ -2,6 +2,7 @@
 
 namespace App\Tests\Controller;
 
+use App\Repository\BlogRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -78,4 +79,24 @@ class MainControllerTest extends WebTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
     }
 
+    public function testCreateForm(): void
+    {
+        $client = static::createClient();
+
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $testUser = $userRepository->findOneByUsername('Admin');
+        $client->loginUser($testUser);
+
+        $crawler = $client->request('GET', '/create');
+
+        $form = $crawler->selectButton('Submit')->form();
+        $form['blog_form[title]']->setValue('Test Title');
+        $form['blog_form[body]']->setValue('testbody');
+        $form['blog_form[shortDescription]']->setValue('testshortDescription');
+
+        $client->submit($form);
+        $client->followRedirect();
+
+        $this->assertStringContainsString('Test Title', $client->getResponse()->getContent());
+    }
 }
