@@ -29,7 +29,7 @@ class BlogController extends AbstractController
      *
      * @return Response
      */
-    public function index(BlogRepository $blogRepository)
+    public function index(BlogRepository $blogRepository): Response
     {
         return $this->render('blog/list.html.twig', ['blogs' => $blogRepository->findAll()]);
     }
@@ -41,7 +41,7 @@ class BlogController extends AbstractController
      *
      * @return Response
      */
-    public function createBlog(Request $request)
+    public function createBlog(Request $request): Response
     {
         $user = $this->getUser();
 
@@ -87,10 +87,8 @@ class BlogController extends AbstractController
      * @Route("/view/{id}")
      *
      * @ParamConverter("blog", class="App:Blog")
-     *
-     * @return Response
      */
-    public function viewBlog(Blog $blog)
+    public function viewBlog(Blog $blog): Response
     {
         return $this->render('blog/view.html.twig', ['blog' => $blog]);
     }

@@ -10,7 +10,7 @@ class UserFixtures extends Fixture
 {
     public const USER_FIXTURE = 'user_fixture';
 
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         $user = new User();
         $user->setUsername('Admin');

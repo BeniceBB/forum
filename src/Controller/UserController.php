@@ -15,10 +15,11 @@ class UserController extends AbstractController
      *
      * @ParamConverter("user", class="App:User")
      *
+     * @param User $user
      * @return Response
      */
 
-    public function viewUser(User $user)
+    public function viewUser(User $user): Response
     {
         return $this->render('user/view.html.twig', ['user' => $user]);
     }

@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 class BlogTest extends TestCase
 {
-    public function testAdd()
+    public function testAdd(): void
     {
         $blog = new Blog();
 

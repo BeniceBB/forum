@@ -11,15 +11,14 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class BlogFormType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('title', TextType::class, ['attr' => ['class' => 'form-control']]);
         $builder->add('shortDescription', TextType::class, ['attr' => ['class' => 'form-control']]);
         $builder->add('body', TextareaType::class, ['attr' => ['class' => 'form-control']]);
-
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(
             [

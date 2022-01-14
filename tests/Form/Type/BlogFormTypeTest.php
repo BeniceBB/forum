@@ -9,7 +9,7 @@ use Symfony\Component\Form\Test\TypeTestCase;
 class BlogFormTypeTest extends TypeTestCase
 {
 
-    public function testSubmitValidData()
+    public function testSubmitValidData(): void
     {
         $formData = [
             'test' => 'test',
