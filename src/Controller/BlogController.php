@@ -13,14 +13,17 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BlogController extends AbstractController
 {
     private $entityManager;
+    private $translator;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, TranslatorInterface $translator)
     {
         $this->entityManager = $entityManager;
+        $this->translator = $translator;
     }
 
     /**
@@ -55,7 +58,7 @@ class BlogController extends AbstractController
                 $blog->setUser($user);
                 $this->entityManager->persist($blog);
                 $this->entityManager->flush();
-                $this->addFlash('success', 'Post was created!');
+                $this->addFlash('success', $this->translator->trans('Post was created!'));
                 return $this->redirectToRoute('app_blog_index');
             }
 
@@ -79,7 +82,7 @@ class BlogController extends AbstractController
         if (!$this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY')) {
             $this->entityManager->remove($blog);
             $this->entityManager->flush();
-            $this->addFlash('success', 'Post is deleted!');
+            $this->addFlash('success', $this->translator->trans('Post is deleted!'));
         }
         return $this->redirectToRoute('app_blog_index');
     }
