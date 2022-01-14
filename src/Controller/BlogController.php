@@ -11,11 +11,17 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\String\Slugger\SluggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class BlogController extends AbstractController
 {
+    private $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * @Route("/")
      *
@@ -35,7 +41,7 @@ class BlogController extends AbstractController
      *
      * @return Response
      */
-    public function createBlog(Request $request, EntityManagerInterface $entityManager)
+    public function createBlog(Request $request)
     {
         $user = $this->getUser();
 
@@ -46,8 +52,8 @@ class BlogController extends AbstractController
 
             if ($form->isSubmitted() && $form->isValid()) {
                 $blog->setUser($user);
-                $entityManager->persist($blog);
-                $entityManager->flush();
+                $this->entityManager->persist($blog);
+                $this->entityManager->flush();
                 $this->addFlash('success', 'Post was created!');
                 return $this->redirectToRoute('app_blog_index');
             }
@@ -64,15 +70,14 @@ class BlogController extends AbstractController
      * @Route("/delete/{id}", name="app_blog_delete")
      *
      * @param Blog $blog
-     * @param EntityManagerInterface $em
      *
      * @return RedirectResponse
      */
-    public function deleteBlog(Blog $blog, EntityManagerInterface $em): RedirectResponse
+    public function deleteBlog(Blog $blog): RedirectResponse
     {
         if (!$this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY')) {
-            $em->remove($blog);
-            $em->flush();
+            $this->entityManager->remove($blog);
+            $this->entityManager->flush();
             $this->addFlash('success', 'Post is deleted!');
         }
         return $this->redirectToRoute('app_blog_index');
@@ -85,7 +90,7 @@ class BlogController extends AbstractController
      *
      * @return Response
      */
-    public function viewBlog(Blog $blog, Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger)
+    public function viewBlog(Blog $blog)
     {
         return $this->render('blog/view.html.twig', ['blog' => $blog]);
     }
