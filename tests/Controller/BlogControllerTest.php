@@ -50,8 +50,8 @@ class BlogControllerTest extends WebTestCase
     public function testView(): void
     {
         $client = static::createClient();
-        $client->request('GET', '/view/1');
-        self::assertPageTitleSame('Lorem Ipsum', $client->getCrawler()->innerText());
+        $client->request('GET', '/view/20')->innerText();
+        $this::assertStringContainsString('Test Title', $client->getResponse()->getContent());
         $this->assertEquals(Response::HTTP_OK, $client->getResponse()->getStatusCode());
     }
 

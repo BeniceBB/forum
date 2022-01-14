@@ -5,7 +5,6 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-
 /**
  * @ORM\Entity(repositoryClass="App\Repository\BlogRepository")
  */
@@ -101,16 +100,4 @@ class Blog
 
         return $this;
     }
-
-//    public function getImage()
-//    {
-//        return $this->image;
-//    }
-//
-//    public function setImage($image): self
-//    {
-//        $this->image = $image;
-//
-//        return $this;
-//    }
 }
