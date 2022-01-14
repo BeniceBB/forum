@@ -3,16 +3,15 @@
 namespace App\DataFixtures;
 
 use App\Entity\Blog;
-use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
-class AppFixtures extends Fixture implements DependentFixtureInterface
+class BlogFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
-        $user = $this->getReference(AppUserFixtures::USER_FIXTURE);
+        $user = $this->getReference(UserFixtures::USER_FIXTURE);
         for ($i = 0; $i < 4; ++$i) {
             $blog = new Blog();
             $blog->setTitle('Lorem ipsum');
@@ -33,7 +32,7 @@ class AppFixtures extends Fixture implements DependentFixtureInterface
     public function getDependencies()
     {
         return [
-            AppUserFixtures::class,
+            UserFixtures::class,
         ];
     }
 }

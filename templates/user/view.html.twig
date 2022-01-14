@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <div class="header"></div>
+
+    <div class="col-lg-8 align-center header-title">
+        <h1>  {{ user.username }}</h1>
+    </div>
+
+    <div class="custom-container">
+        <div class="row">
+            <div class="col-lg-10 align-center">
+                <strong>ID: </strong>{{ user.id }}<br>
+                <strong>Naam: </strong>{{ user.username }}<br><br>
+                <a href="{{ path('app_blog_index') }}">Back to overview</a>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

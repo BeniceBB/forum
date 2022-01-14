@@ -2,12 +2,11 @@
 
 namespace App\Tests\Controller;
 
-use App\Repository\BlogRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
-class MainControllerTest extends WebTestCase
+class BlogControllerTest extends WebTestCase
 {
 
     public function testIndex(): void
@@ -52,15 +51,8 @@ class MainControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $client->request('GET', '/view/1');
-        self::assertPageTitleSame('Post', $client->getCrawler()->innerText());
+        self::assertPageTitleSame('Lorem Ipsum', $client->getCrawler()->innerText());
         $this->assertEquals(Response::HTTP_OK, $client->getResponse()->getStatusCode());
-    }
-
-    public function testViewUser(): void
-    {
-        $client = static::createClient();
-        $client->request('GET', '/viewUser/1');
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
     }
 
     public function testCreate(): void
