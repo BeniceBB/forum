@@ -94,4 +94,13 @@ class BlogControllerTest extends WebTestCase
 
         $this->assertStringContainsString('Test Title', $client->getResponse()->getContent());
     }
+
+    /**
+     * @group Integration
+     */
+
+    public function testIntegrationTest(): void
+    {
+
+    }
 }

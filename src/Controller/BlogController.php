@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Blog;
 use App\Form\Type\BlogFormType;
 use App\Repository\BlogRepository;
+use App\Services\BlogContentManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -88,8 +89,8 @@ class BlogController extends AbstractController
      *
      * @ParamConverter("blog", class="App:Blog")
      */
-    public function viewBlog(Blog $blog): Response
+    public function viewBlog(BlogContentManager $blogContentManager, int $id): Response
     {
-        return $this->render('blog/view.html.twig', ['blog' => $blog]);
+        return $this->render('blog/view.html.twig', ['blog' => $blogContentManager->getBlogContent($id)]);
     }
 }
