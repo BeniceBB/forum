@@ -18,6 +18,8 @@ link.delete: Delete
 link.back_to_overview: Back to overview
 link.register_new: Register new user
 
+delete.confirm: Are you sure?
+
 header.posts: Posts
 header.new_post: New post
 header.register: Register

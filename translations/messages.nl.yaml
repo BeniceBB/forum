@@ -18,6 +18,8 @@ link.delete: Verwijder
 link.back_to_overview: Terug naar overzicht
 link.register_new: Registeer een nieuwe gebruiker
 
+delete.confirm: Weet je het zeker?
+
 header.posts: Berichten
 header.new_post: Nieuw bericht
 header.register: Registreer

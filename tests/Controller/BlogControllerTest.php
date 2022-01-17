@@ -20,7 +20,7 @@ class BlogControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $client->request('GET', '/');
-        $client->clickLink('Create post');
+        $client->clickLink('Nieuw bericht');
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
     }
 
@@ -28,7 +28,7 @@ class BlogControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $client->request('GET', '/');
-        $client->clickLink('Delete');
+        $client->clickLink('Verwijder');
         $client->followRedirect();
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
     }
@@ -42,15 +42,15 @@ class BlogControllerTest extends WebTestCase
         $client->loginUser($testUser);
 
         $client->request('GET', '/');
-        $client->clickLink('Delete');
+        $client->clickLink('Verwijder');
         $client->followRedirect();
-        $this->assertStringContainsString('Post is deleted', $client->getResponse()->getContent());
+        $this->assertStringContainsString('Bericht is verwijderd', $client->getResponse()->getContent());
     }
 
     public function testView(): void
     {
         $client = static::createClient();
-        $client->request('GET', '/view/20')->innerText();
+        $client->request('GET', '/view/24')->innerText();
         $this::assertStringContainsString('Test Title', $client->getResponse()->getContent());
         $this->assertEquals(Response::HTTP_OK, $client->getResponse()->getStatusCode());
     }
@@ -84,7 +84,7 @@ class BlogControllerTest extends WebTestCase
 
         $crawler = $client->request('GET', '/create');
 
-        $form = $crawler->selectButton('Submit')->form();
+        $form = $crawler->selectButton('Opslaan')->form();
         $form['blog_form[title]']->setValue('Test Title');
         $form['blog_form[body]']->setValue('testbody');
         $form['blog_form[shortDescription]']->setValue('testshortDescription');
@@ -93,14 +93,5 @@ class BlogControllerTest extends WebTestCase
         $client->followRedirect();
 
         $this->assertStringContainsString('Test Title', $client->getResponse()->getContent());
-    }
-
-    /**
-     * @group Integration
-     */
-
-    public function testIntegrationTest(): void
-    {
-
     }
 }

@@ -11,10 +11,10 @@
             <div class="col-lg-10 align-center">
 
                 <div class="row">
-                    <div class="col-lg-3">
+                    <div class="col-lg-12">
                         <a href="{{ path('app_blog_createblog') }}"
                            class="btn btn-dark">{% trans %} post.create{% endtrans %}</a>
-
+                        <div class="post_count">{{ post_amount }}</div>
                     </div>
                     <br>
                 </div>
@@ -26,8 +26,6 @@
                         </div>
                     {% endfor %}
                 {% endfor %}
-
-                {{ post_amount }}
 
                 <table class="table table-striped ">
                     <thead class="thead-dark">
@@ -52,7 +50,7 @@
                             </td>
                             <td>
                                 <a href="{{ path('app_blog_delete', {id: blog.id}) }}"
-                                   onclick="return confirm('Are you sure?');">{% trans %} link.delete {% endtrans %}</a>
+                                   onclick="return confirm('{% trans %}delete.confirm{% endtrans %}');">{% trans %} link.delete {% endtrans %}</a>
                             </td>
                         </tr>
                     {% endfor %}
