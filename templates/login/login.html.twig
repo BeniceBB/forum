@@ -1,38 +1,39 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Login!{% endblock %}
+{% block title %}Login{% endblock %}
+
+{% block headertitle %}
+    <h1>{% trans %}Login{% endtrans %}</h1>
+{% endblock %}
+
 
 {% block body %}
-<div class="header"></div>
-<div class="col-lg-8 align-center header-title">
-    <h1>Login</h1>
-</div>
-<div class="custom-container">
-    <div class="row">
-        <div class="col-lg-10 align-center">
-    {% if error %}
-        <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
+    <div class="custom-container">
+        <div class="row">
+            <div class="col-lg-10 align-center">
+                {% if error %}
+                    <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                {% endif %}
 
-    <form action="{{ path('login') }}" method="post">
-        <div class="form-group">
-            <label for="username">Username</label><br>
-            <input type="text" id="username" name="_username" value="{{ last_username }}"/>
-        </div>
-        <div class="form-group">
-        <label for="password">Password:</label><br>
-        <input type="password" id="password" name="_password"/>
-        </div>
-        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                <form action="{{ path('login') }}" method="post">
+                    <div class="form-group">
+                        <label for="username">{% trans %}label.username{% endtrans %}</label><br>
+                        <input type="text" id="username" name="_username" value="{{ last_username }}"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">{% trans %}label.password{% endtrans %}</label><br>
+                        <input type="password" id="password" name="_password"/>
+                    </div>
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-        {# If you want to control the URL the user is redirected to on success
+                    {# If you want to control the URL the user is redirected to on success
         <input type="hidden" name="_target_path" value="/account"/> #}
 
-        <button type="submit" class="btn btn-dark">Login</button>
-        <a href="{{ path('app_register') }}">Or register new user</a><br>
-        <br> <a href="{{ path('app_blog_index') }}">{% trans %}link.back_to_overview{% endtrans %}</a>
-    </form>
+                    <button type="submit" class="btn btn-dark">Login</button>
+                    <a href="{{ path('app_register') }}">{% trans %}link.register_new{% endtrans %}</a><br>
+                    <br> <a href="{{ path('app_blog_index') }}">{% trans %}link.back_to_overview{% endtrans %}</a>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 {% endblock %}

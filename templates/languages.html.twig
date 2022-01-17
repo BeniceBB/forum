@@ -1,0 +1,13 @@
+<div class="language-menu col-lg-8 align-center">
+    {% if app.request.locale == 'en' %}
+        <a href="{{ path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': 'nl'})) }}">Nederlands</a>
+        <a class="active"
+           href="{{ path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': 'en'})) }}">English</a>
+    {% endif %}
+
+    {% if app.request.locale == 'nl' %}
+        <a class="active"
+           href="{{ path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': 'nl'})) }}">Nederlands</a>
+        <a href="{{ path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': 'en'})) }}">English</a>
+    {% endif %}
+</div>

@@ -9,11 +9,15 @@ table.actions: Actions
 table.text: Post
 
 label.name: Name
+label.username: Username
+label.password: Password
 
 form.submit: Submit
 
 link.delete: Delete
 link.back_to_overview: Back to overview
+link.register_new: Register new user
 
 header.posts: Posts
 header.new_post: New post
+header.register: Register

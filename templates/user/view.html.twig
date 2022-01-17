@@ -1,12 +1,10 @@
 {% extends 'base.html.twig' %}
 
+{% block headertitle %}
+    <h1>{{ user.username }}</h1>
+{% endblock %}
+
 {% block body %}
-
-    <div class="header"></div>
-
-    <div class="col-lg-8 align-center header-title">
-        <h1>  {{ user.username }}</h1>
-    </div>
 
     <div class="custom-container">
         <div class="row">
