@@ -39,7 +39,7 @@ class BlogController extends AbstractController
     }
 
     /**
-     * @Route("/create")
+     * @Route("/{_locale}/create")
      *
      * @param Request $request
      *
@@ -58,7 +58,7 @@ class BlogController extends AbstractController
                 $blog->setUser($user);
                 $this->entityManager->persist($blog);
                 $this->entityManager->flush();
-                $this->addFlash('success', $this->translator->trans('Post was created!'));
+                $this->addFlash('success', $this->translator->trans('post.created'));
                 return $this->redirectToRoute('app_blog_index');
             }
 
@@ -82,7 +82,7 @@ class BlogController extends AbstractController
         if (!$this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY')) {
             $this->entityManager->remove($blog);
             $this->entityManager->flush();
-            $this->addFlash('success', $this->translator->trans('Post is deleted!'));
+            $this->addFlash('success', $this->translator->trans('post.deleted'));
         }
         return $this->redirectToRoute('app_blog_index');
     }
