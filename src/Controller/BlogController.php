@@ -28,7 +28,7 @@ class BlogController extends AbstractController
     }
 
     /**
-     * @Route("{_locale}/")
+     * @Route("/")
      *
      * @param BlogRepository $blogRepository
      *
@@ -47,7 +47,7 @@ class BlogController extends AbstractController
     }
 
     /**
-     * @Route("/{_locale}/create")
+     * @Route("/create")
      *
      * @param Request $request
      *

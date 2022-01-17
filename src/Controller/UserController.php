@@ -11,7 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 class UserController extends AbstractController
 {
     /**
-     * @Route("{_locale}/view/user/{username}")
+     * @Route("/view/user/{username}")
      *
      * @ParamConverter("user", class="App:User")
      *
