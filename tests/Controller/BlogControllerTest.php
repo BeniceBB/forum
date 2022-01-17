@@ -33,6 +33,15 @@ class BlogControllerTest extends WebTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
     }
 
+    public function testDeleteLinkEN(): void
+    {
+        $client = static::createClient();
+        $client->request('GET', '/en');
+        $client->clickLink('Delete');
+        $client->followRedirect();
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+    }
+
     public function testDeleteLinkAuthenticated(): void
     {
         $client = static::createClient();
