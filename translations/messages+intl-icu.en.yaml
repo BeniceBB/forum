@@ -1,0 +1,7 @@
+post.amount: >-
+  {amount, plural,
+  =0  {There are no posts}
+  one {One post}
+  other {# posts}
+  }
+#  '{amount} posts'

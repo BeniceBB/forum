@@ -1,0 +1,6 @@
+post.amount: >-
+  {amount, plural,
+  =0  {Er zijn geen berichten}
+  one {1 bericht}
+  other {# berichten}
+  }

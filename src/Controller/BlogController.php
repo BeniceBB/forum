@@ -7,6 +7,7 @@ use App\Form\Type\BlogFormType;
 use App\Repository\BlogRepository;
 use App\Services\BlogContentManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,14 +21,14 @@ class BlogController extends AbstractController
     private $entityManager;
     private $translator;
 
-    public function __construct(EntityManagerInterface $entityManager, TranslatorInterface $translator)
+    public function __construct(EntityManagerInterface $entityManager, TranslatorInterface $translator, private ManagerRegistry $doctrine)
     {
         $this->entityManager = $entityManager;
         $this->translator = $translator;
     }
 
     /**
-     * @Route("/")
+     * @Route("{_locale}/")
      *
      * @param BlogRepository $blogRepository
      *
@@ -35,7 +36,14 @@ class BlogController extends AbstractController
      */
     public function index(BlogRepository $blogRepository): Response
     {
-        return $this->render('blog/list.html.twig', ['blogs' => $blogRepository->findAll()]);
+        $em = $this->doctrine->getManager();
+        $repoBlogs = $em->getRepository(Blog::class);
+        $totalBlogs = $repoBlogs->createQueryBuilder('a')
+            ->select('count(a.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return $this->render('blog/list.html.twig', ['blogs' => $blogRepository->findAll(), 'post_amount' => $this->translator->trans('post.amount', ['amount' => $totalBlogs])]);
     }
 
     /**
