@@ -21,7 +21,7 @@
                 <br><br>
                 Auteur:<a
                         href="{{ path('app_user_viewuser', {username: blog.user.username}) }}">  {{ blog.user.username }}</a><br>
-                <a href="{{ path('app_blog_index') }}">Back to overview</a>
+                <a href="{{ path('app_blog_index') }}">{% trans %}link.back_to_overview{% endtrans %}</a>
             </div>
         </div>
     </div>

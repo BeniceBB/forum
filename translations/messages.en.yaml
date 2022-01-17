@@ -1,2 +1,19 @@
 post.created: Post is created
 post.deleted: Post is deleted
+post.create: New post
+
+table.title: Title
+table.short_description: Short description
+table.author: Author
+table.actions: Actions
+table.text: Post
+
+label.name: Name
+
+form.submit: Submit
+
+link.delete: Delete
+link.back_to_overview: Back to overview
+
+header.posts: Posts
+header.new_post: New post

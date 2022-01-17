@@ -1,4 +1,19 @@
 post.created: Bericht is aangemaakt
 post.deleted: Bericht is verwijderd
+post.create: Nieuw bericht
 
-new: nieuw
+table.title: Titel
+table.short_description: Korte omschrijving
+table.author: Auteur
+table.actions: Actie
+table.text: Bericht
+
+label.name: Naam
+
+form.submit: Opslaan
+
+link.delete: Verwijder
+link.back_to_overview: Terug naar overzicht
+
+header.posts: Berichten
+header.new_post: Nieuw bericht
