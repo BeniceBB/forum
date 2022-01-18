@@ -20,7 +20,7 @@
 
     <testsuites>
         <testsuite name="Project Test Suite">
-            <directory>tests</directory>phpunit.xml.dist
+            <directory>tests</directory>
         </testsuite>
     </testsuites>
 
@@ -33,6 +33,10 @@
     <listeners>
         <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener" />
     </listeners>
+
+<!--    <extensions>-->
+<!--        <extension class="DAMA\DoctrineTestBundle\PHPUnit\PHPUnitExtension"/>-->
+<!--    </extensions>-->
 
     <!-- Run `composer require symfony/panther` before enabling this extension -->
     <!--

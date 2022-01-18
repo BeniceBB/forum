@@ -14,8 +14,8 @@ class BlogContentTest extends KernelTestCase
         $container = static::getContainer();
 
         $blogContentGenerator = $container->get(BlogContentManager::class);
-        $blogContent = $blogContentGenerator->getBlogContent(24);
+        $blogContent = $blogContentGenerator->getBlogContent(1);
 
-        $this->assertEquals('Test Title', $blogContent->getTitle(24));
+        $this->assertEquals('Lorem ipsum', $blogContent->getTitle(1));
     }
 }
