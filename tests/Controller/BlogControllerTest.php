@@ -2,7 +2,6 @@
 
 namespace App\Tests\Controller;
 
-use App\DataFixtures\BlogFixtures;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
@@ -91,7 +90,7 @@ class BlogControllerTest extends WebTestCase
         $this->assertStringContainsString('Post is deleted', $client->getResponse()->getContent());
     }
 
-        public function testDeleteLinkAuthenticated(): void
+    public function testDeleteLinkAuthenticated(): void
     {
         $client = static::createClient();
 
