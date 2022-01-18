@@ -11,15 +11,21 @@ table.text: Bericht
 label.name: Naam
 label.username: Gebruikersnaam
 label.password: Wachtwoord
+label.new_password: Kies een wachtwoord
 
 form.submit: Opslaan
+form.register: Registreer
 
 link.delete: Verwijder
 link.back_to_overview: Terug naar overzicht
-link.register_new: Registeer een nieuwe gebruiker
+link.register_new: Nog geen account? Klik hier om te registreren
+link.login: Al een account? Klik hier om in te loggen
 
 delete.confirm: Weet je het zeker?
 
 header.posts: Berichten
 header.new_post: Nieuw bericht
 header.register: Registreer
+
+registration.success: Succesvol geregistreerd, je kunt nu inloggen
+registration.agree_terms: Akkoord met de voorwaarden

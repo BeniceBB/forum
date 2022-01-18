@@ -12,8 +12,10 @@
 
                 <div class="row">
                     <div class="col-lg-12">
-                        <a href="{{ path('app_blog_createblog') }}"
-                           class="btn btn-dark">{% trans %} post.create{% endtrans %}</a>
+                        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                            <a href="{{ path('app_blog_createblog') }}"
+                               class="btn btn-dark">{% trans %}post.create{% endtrans %}</a>
+                        {% endif %}
                         <div class="post_count">{{ post_amount }}</div>
                     </div>
                     <br>
@@ -33,7 +35,9 @@
                         <th>{% trans %} table.title {% endtrans %}</th>
                         <th>{% trans %}table.short_description{% endtrans %}</th>
                         <th>{% trans %}table.author{% endtrans %}</th>
-                        <th>{% trans %}table.actions{% endtrans %}</th>
+                        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                            <th>{% trans %}table.actions{% endtrans %}</th>
+                        {% endif %}
                     </tr>
                     </thead>
                     <tbody>
@@ -48,10 +52,12 @@
                                     {{ blog.user.username }}
                                 </a>
                             </td>
-                            <td>
-                                <a href="{{ path('app_blog_delete', {id: blog.id}) }}"
-                                   onclick="return confirm('{% trans %}delete.confirm{% endtrans %}');">{% trans %} link.delete {% endtrans %}</a>
-                            </td>
+                            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                                <td>
+                                    <a href="{{ path('app_blog_delete', {id: blog.id}) }}"
+                                       onclick="return confirm('{% trans %}delete.confirm{% endtrans %}');">{% trans %} link.delete {% endtrans %}</a>
+                                </td>
+                            {% endif %}
                         </tr>
                     {% endfor %}
                     </tbody>

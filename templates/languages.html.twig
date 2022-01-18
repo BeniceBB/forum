@@ -10,4 +10,9 @@
            href="{{ path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': 'nl'})) }}">Nederlands</a>
         <a href="{{ path(app.request.get('_route'), app.request.get('_route_params')|merge({'_locale': 'en'})) }}">English</a>
     {% endif %}
+    {% if is_granted('ROLE_USER') %}
+        <a href="{{ path('app_logout') }}" class="fas fa-sign-out-alt" title="logoff"></a>
+    {% else %}
+        <a href="{{ path('login') }}" class="fas fa-sign-in-alt" title="login"></a>
+    {% endif %}
 </div>

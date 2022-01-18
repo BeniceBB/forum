@@ -11,15 +11,21 @@ table.text: Post
 label.name: Name
 label.username: Username
 label.password: Password
+label.new_password: Choose a password
 
 form.submit: Submit
+form.register: Register
 
 link.delete: Delete
 link.back_to_overview: Back to overview
-link.register_new: Register new user
+link.register_new: No account? Click here to register
+link.login: Already have an account? Click here to login
 
 delete.confirm: Are you sure?
 
 header.posts: Posts
 header.new_post: New post
 header.register: Register
+
+registration.success: Registration succes, please login
+registration.agree_terms: Agree terms

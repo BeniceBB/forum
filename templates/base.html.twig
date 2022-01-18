@@ -21,6 +21,10 @@
                 margin-top: 10px;
             }
 
+            .table{
+                margin-top: 10px;
+            }
+
             .align-center {
                 margin: 0 auto;
             }
@@ -82,10 +86,17 @@
             label {
                 font-weight: bold;
             }
+
+            .register-link
+            {
+                float: right;
+                margin-top: 20px;
+            }
         </style>
     {% endblock %}
 
     {% block javascripts %}
+        <script src="https://kit.fontawesome.com/0e1301bd15.js" crossorigin="anonymous"></script>
         {{ encore_entry_script_tags('app') }}
     {% endblock %}
 </head>
@@ -99,6 +110,7 @@
 
 {% block languages %}
     {% include 'languages.html.twig' %}
+
 {% endblock %}
 
 {% block body %}{% endblock %}
