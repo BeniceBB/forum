@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Post{% endblock %}
+{% block title %}{% trans %}title.view{% endtrans %} | {{ blog.title }}{% endblock %}
 
     {% block headertitle %}
         <h1>{{ blog.title }}</h1>
@@ -17,11 +17,14 @@
                         </div>
                     {% endfor %}
                 {% endfor %}
-                {{ blog.body }}
-                <br><br>
-                Auteur:<a
-                        href="{{ path('app_user_viewuser', {username: blog.user.username}) }}">  {{ blog.user.username }}</a><br>
-                <a href="{{ path('app_blog_index') }}">{% trans %}link.back_to_overview{% endtrans %}</a>
+                <div class="blog-fullpost">
+                    {{ blog.body }}
+                </div>
+                <div class="blog-foot">
+                    {% trans %}table.author{% endtrans %}:<a
+                            href="{{ path('app_user_viewuser', {username: blog.user.username}) }}">  {{ blog.user.username }}</a><br>
+                    <a href="{{ path('app_blog_index') }}">{% trans %}link.back_to_overview{% endtrans %}</a>
+                </div>
             </div>
         </div>
     </div>

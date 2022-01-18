@@ -5,7 +5,6 @@ namespace App\Repository;
 use App\Entity\Blog;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Doctrine\ORM\EntityRepository;
 
 /**
  * @method Blog|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,13 +18,4 @@ class BlogRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Blog::class);
     }
-
-//    public function countBlogs()
-//    {
-//        $entityManager = $this->getEntityManager();
-//        $query = $entityManager->createQuery(
-//            'SELECT COUNT (id) FROM App\Entity\Blog AS amount'
-//        );
-//        return $query->getResult();
-//    }
 }

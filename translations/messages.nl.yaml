@@ -26,6 +26,13 @@ delete.confirm: Weet je het zeker?
 header.posts: Berichten
 header.new_post: Nieuw bericht
 header.register: Registreer
+header.author_details: Auteursgegevens
 
 registration.success: Succesvol geregistreerd, je kunt nu inloggen
 registration.agree_terms: Akkoord met de voorwaarden
+registration.enter_password: Voer een wachtwoord in
+registration.password_limit: Je wachtwoord moet minstens {{ limit }} karakters lang zijn
+
+title.welcome: Welkom!
+title.view: Bekijk
+title.new_post: Nieuw bericht

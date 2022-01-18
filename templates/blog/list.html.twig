@@ -43,7 +43,6 @@
                     <tbody>
                     {% for blog in blogs %}
                         <tr>
-
                             <td><a href="{{ path('app_blog_viewblog', {id: blog.id}) }}"
                                    style="cursor:pointer">{{ blog.title }}</a></td>
                             <td>{{ blog.shortDescription }}</td>

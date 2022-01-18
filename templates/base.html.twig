@@ -8,9 +8,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-    {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
     {% block stylesheets %}
-        {{ encore_entry_link_tags('app') }}
         <style>
             body {
                 font-family: 'Open Sans', sans-serif;
@@ -21,7 +19,7 @@
                 margin-top: 10px;
             }
 
-            .table{
+            .table {
                 margin-top: 10px;
             }
 
@@ -29,7 +27,7 @@
                 margin: 0 auto;
             }
 
-            .header-bg{
+            .header-bg {
                 width: 100vw;
                 background-color: #09162b;
                 transform: skewY(-8deg);
@@ -45,24 +43,22 @@
                 font-weight: 800 !important;
             }
 
-            .language-menu{
+            .language-menu {
                 position: relative;
                 text-align: right;
             }
 
-            .language-menu a{
+            .language-menu a {
                 margin-left: 20px;
             }
 
-            .language-menu .active
-            {
+            .language-menu .active {
                 font-weight: bold;
                 padding-bottom: 5px;
                 border-bottom: 2px solid #007bff;
             }
 
-            .post_count
-            {
+            .post_count {
                 float: right;
                 padding-top: 15px;
             }
@@ -87,25 +83,28 @@
                 font-weight: bold;
             }
 
-            .register-link
-            {
+            .register-link {
                 float: right;
                 margin-top: 20px;
+            }
+
+            .blog-foot {
+                font-size: 15px;
+                margin-top: 50px;
             }
         </style>
     {% endblock %}
 
     {% block javascripts %}
         <script src="https://kit.fontawesome.com/0e1301bd15.js" crossorigin="anonymous"></script>
-        {{ encore_entry_script_tags('app') }}
     {% endblock %}
 </head>
 <body>
 <div class="header">
-<div class="header-bg"></div>
-<div class="col-lg-8 align-center header-title">
-    {% block headertitle %}{% endblock %}
-</div>
+    <div class="header-bg"></div>
+    <div class="col-lg-8 align-center header-title">
+        {% block headertitle %}{% endblock %}
+    </div>
 </div>
 
 {% block languages %}

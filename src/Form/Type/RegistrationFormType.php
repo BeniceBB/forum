@@ -3,8 +3,6 @@
 namespace App\Form\Type;
 
 use App\Entity\User;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -43,12 +41,11 @@ class RegistrationFormType extends AbstractType
                 'attr' => ['autocomplete' => 'new-password', 'class' => 'form-control'],
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter a password',
+                        'message' => $this->translator->trans('registration.enter_password'),
                     ]),
                     new Length([
                         'min' => 6,
-                        'minMessage' => 'Your password should be at least {{ limit }} characters',
-                        // max length allowed by Symfony for security reasons
+                        'minMessage' => $this->translator->trans('registration.password_limit'),
                         'max' => 4096,
                     ]),
                 ],

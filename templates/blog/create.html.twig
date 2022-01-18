@@ -1,4 +1,7 @@
 {% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}title.new_post{% endtrans %}{% endblock %}
+
     {% block headertitle %}
         <h1>{% trans %} header.new_post {% endtrans %}</h1>
     {% endblock %}
@@ -31,9 +34,9 @@
                 </div>
 
                 <button type="submit" class="btn btn-dark">{% trans %}form.submit{% endtrans %}</button>
-                <a href="{{ path('app_blog_index') }}">{% trans %}link.back_to_overview{% endtrans %}</a>
-
-
+                <div class="back_to_overview">
+                    <a href="{{ path('app_blog_index') }}">{% trans %}link.back_to_overview{% endtrans %}</a>
+                </div>
                 {{ form_end(form) }}
             </div>
         </div>

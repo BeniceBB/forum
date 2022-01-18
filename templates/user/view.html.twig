@@ -1,7 +1,9 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}{% trans %}title.view{% endtrans %} | {{ user.username }}{% endblock %}
+
 {% block headertitle %}
-    <h1>{{ user.username }}</h1>
+    <h1>{% trans %}header.author_details{% endtrans %}</h1>
 {% endblock %}
 
 {% block body %}
@@ -9,7 +11,6 @@
     <div class="custom-container">
         <div class="row">
             <div class="col-lg-10 align-center">
-                <strong>ID: </strong>{{ user.id }}<br>
                 <strong>{% trans %}label.name{% endtrans %}: </strong>{{ user.username }}<br><br>
                 <a href="{{ path('app_blog_index') }}">{% trans %}link.back_to_overview{% endtrans %}</a>
             </div>

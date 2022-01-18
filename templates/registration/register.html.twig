@@ -11,6 +11,13 @@
     <div class="custom-container">
         <div class="row">
             <div class="col-lg-10 align-center">
+                {% for label, messages in app.flashes %}
+                    {% for message in messages %}
+                        <div class="flash-{{ label }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endfor %}
                 {{ form_start(form) }}
                 <div class="form-group">
                     <label>{% trans %}label.username{% endtrans %}</label>
