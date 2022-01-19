@@ -31,41 +31,9 @@
                         </div>
                     {% endfor %}
                 {% endfor %}
-
-                <table class="table table-striped ">
-                    <thead class="thead-dark">
-                    <tr>
-                        <th>{% trans %} table.title {% endtrans %}</th>
-                        <th>{% trans %}table.short_description{% endtrans %}</th>
-                        <th>{% trans %}table.author{% endtrans %}</th>
-                        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                            <th>{% trans %}table.actions{% endtrans %}</th>
-                        {% endif %}
-                    </tr>
-                    </thead>
-                    <tbody>
-
-                    {% for blog in blogs %}
-                        <tr>
-                            <td><a href="{{ path('app_blog_viewblog', {id: blog.id}) }}"
-                                   style="cursor:pointer">{{ blog.title }}</a></td>
-                            <td>{{ blog.shortDescription }}</td>
-                            <td>
-                                <a href="{{ path('app_user_viewuser', {username: blog.user.username}) }}">
-                                    {{ blog.user.username }}
-                                </a>
-                            </td>
-                            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                                <td>
-                                    <a href="{{ path('app_blog_delete', {id: blog.id}) }}"
-                                       onclick="return confirm('{% trans %}delete.confirm{% endtrans %}');">{% trans %} link.delete {% endtrans %}</a>
-                                </td>
-                            {% endif %}
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-
+                <div id="blogtable" data-number-of-blogs="0">
+                    {% include 'blog/blogtable.html.twig' %}
+                </div>
             </div>
         </div>
     </div>

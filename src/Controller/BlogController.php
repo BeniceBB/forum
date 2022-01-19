@@ -51,16 +51,19 @@ class BlogController extends AbstractController
     }
 
     /**
-     * @Route("/search")
+     * @Route("/search", name="blogsearch" )
      *
      * @return Response
      */
     public function search(int $offset = 0): Response
     {
-
-        // route: /search/{offset}, in function: int $offset
         $filteredblogs = $this->searchFilterManager->getBlogs($offset);
-        return $this->json(['test']);
+        return $this->json([
+            'result' => $this->renderView('blog/blogtable.html.twig', [
+                'blogs' => $filteredblogs,
+            ]),
+            'offset' => $offset,
+            ]);
     }
 
     /**
