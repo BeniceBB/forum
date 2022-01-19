@@ -9,7 +9,10 @@
     <div class="custom-container">
         <div class="row">
             <div class="col-lg-10 align-center">
+                {% block searchbar %}
+                    {% include 'search/search.html.twig' %}
 
+                {% endblock %}
                 <div class="row">
                     <div class="col-lg-12">
                         {% if is_granted('IS_AUTHENTICATED_FULLY') %}
@@ -41,6 +44,7 @@
                     </tr>
                     </thead>
                     <tbody>
+
                     {% for blog in blogs %}
                         <tr>
                             <td><a href="{{ path('app_blog_viewblog', {id: blog.id}) }}"

@@ -1,0 +1,54 @@
+<form action="" method="post" id="searchform">
+
+    <input type="search" id="search" name="search" class="form-control" placeholder="Zoeken"/>
+
+    <br>
+
+    <div class="types">
+        <input type="checkbox" id="all" name="all" checked>
+        <label for="all">Alle</label>
+        <input type="checkbox" id="title" name="title">
+        <label for="title">Titel</label>
+        <input type="checkbox" id="shortDescription" name="shortDescription">
+        <label for="shortDescription">Omschrijving</label>
+        <input type="checkbox" id="content" name="content">
+        <label for="content">Bericht</label>
+        <input type="checkbox" id="user" name="user">
+        <label for="user">Auteur</label>
+    </div>
+
+    <br>
+
+    <label for="offset">Berichten per pagina</label>
+    <select name="offset">
+        <option value="5">5</option>
+        <option value="5">10</option>
+        <option value="5">25</option>
+        <option value="5">50</option>
+    </select>
+
+    <br>
+
+    <button type="submit" class="btn btn-dark">Search</button>
+</form>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+    $('#searchForm').submit(function (e) {
+        e.preventDefault();
+        var form = new FormData(this);
+        $.ajax({
+            type: 'POST',
+            url: Routing.generate('search'),
+            data: form,
+            processData: false,
+            contentType: false,
+        }).done(function (data) {
+
+        }).fail(function (data) {
+        });
+    });
+    })
+    ;
+</script>

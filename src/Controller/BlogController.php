@@ -6,9 +6,11 @@ use App\Entity\Blog;
 use App\Form\Type\BlogFormType;
 use App\Repository\BlogRepository;
 use App\Services\BlogContentManager;
+use App\Services\SearchFilterManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,30 +22,45 @@ class BlogController extends AbstractController
 {
     private $entityManager;
     private $translator;
+    private SearchFilterManager $searchFilterManager;
 
-    public function __construct(EntityManagerInterface $entityManager, TranslatorInterface $translator, private ManagerRegistry $doctrine)
+    public function __construct(EntityManagerInterface $entityManager, TranslatorInterface $translator, SearchFilterManager $searchFilterManager)
     {
         $this->entityManager = $entityManager;
         $this->translator = $translator;
+        $this->searchFilterManager = $searchFilterManager;
     }
 
     /**
      * @Route("/")
      *
-     * @param BlogRepository $blogRepository
+     * @return Response
+     */
+    public function index(int $offset = 0): Response
+    {
+
+        // route: /search/{offset}, in function: int $offset
+      $filteredblogs = $this->searchFilterManager->getBlogs($offset);
+        return $this->render('blog/list.html.twig', [
+            'blogs' => $filteredblogs,
+            'post_amount' => $this->translator->trans('post.amount', ['amount' => count($filteredblogs)])
+            // Searchform omzetten naar formType
+        ]);
+
+
+    }
+
+    /**
+     * @Route("/search")
      *
      * @return Response
      */
-    public function index(BlogRepository $blogRepository): Response
+    public function search(int $offset = 0): Response
     {
-        $em = $this->doctrine->getManager();
-        $repoBlogs = $em->getRepository(Blog::class);
-        $totalBlogs = $repoBlogs->createQueryBuilder('a')
-            ->select('count(a.id)')
-            ->getQuery()
-            ->getSingleScalarResult();
 
-        return $this->render('blog/list.html.twig', ['blogs' => $blogRepository->findAll(), 'post_amount' => $this->translator->trans('post.amount', ['amount' => $totalBlogs])]);
+        // route: /search/{offset}, in function: int $offset
+        $filteredblogs = $this->searchFilterManager->getBlogs($offset);
+        return $this->json(['test']);
     }
 
     /**
