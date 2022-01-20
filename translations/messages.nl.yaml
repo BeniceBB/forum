@@ -12,9 +12,19 @@ label.name: Naam
 label.username: Gebruikersnaam
 label.password: Wachtwoord
 label.new_password: Kies een wachtwoord
+label.title: Titels
+label.all: Alle
+label.description: Omschrijvingen
+label.post: Bericht
+label.author: Auteurs
+label.amountfilter: Berichten per pagina
+label.search_in: Zoeken in
+
+placeholder.search: Zoeken
 
 form.submit: Opslaan
 form.register: Registreer
+form.search: Zoek
 
 link.delete: Verwijder
 link.back_to_overview: Terug naar overzicht

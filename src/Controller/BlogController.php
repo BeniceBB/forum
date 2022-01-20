@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Blog;
 use App\Form\Type\BlogFormType;
+use App\Form\Type\SearchFormType;
 use App\Repository\BlogRepository;
 use App\Services\BlogContentManager;
 use App\Services\SearchFilterManager;
@@ -36,15 +37,14 @@ class BlogController extends AbstractController
      *
      * @return Response
      */
-    public function index(int $offset = 0): Response
+    public function index(array $data = [], int $offset = 0): Response
     {
-
-        // route: /search/{offset}, in function: int $offset
-      $filteredblogs = $this->searchFilterManager->getBlogs($offset);
+        $form = $this->createForm(SearchFormType::class);
+        $filteredblogs = $this->searchFilterManager->getBlogs($data, $offset);
         return $this->render('blog/list.html.twig', [
             'blogs' => $filteredblogs,
-            'post_amount' => $this->translator->trans('post.amount', ['amount' => count($filteredblogs)])
-            // Searchform omzetten naar formType
+            'post_amount' => $this->translator->trans('post.amount', ['amount' => count($filteredblogs)]),
+            'searchForm' => $form->createView(),
         ]);
 
 
@@ -55,15 +55,23 @@ class BlogController extends AbstractController
      *
      * @return Response
      */
-    public function search(int $offset = 0): Response
+    public function search(Request $request, int $offset = 0): Response
     {
-        $filteredblogs = $this->searchFilterManager->getBlogs($offset);
+        $form = $this->createForm(SearchFormType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            $offset = 0;
+//            $searchInput = $data['search'];
+
+        }
+        $filteredblogs = $this->searchFilterManager->getBlogs($data, $offset);
         return $this->json([
             'result' => $this->renderView('blog/blogtable.html.twig', [
-                'blogs' => $filteredblogs,
+            'blogs' => $filteredblogs,
             ]),
             'offset' => $offset,
-            ]);
+        ]);
     }
 
     /**

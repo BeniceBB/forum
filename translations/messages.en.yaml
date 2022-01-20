@@ -12,9 +12,19 @@ label.name: Name
 label.username: Username
 label.password: Password
 label.new_password: Choose a password
+label.title: Titles
+label.all: All
+label.description: Descriptions
+label.post: Post
+label.author: Authors
+label.amountfilter: Posts per page
+label.search_in: Search in
+
+placeholder.search: Search
 
 form.submit: Submit
 form.register: Register
+form.search: Search
 
 link.delete: Delete
 link.back_to_overview: Back to overview

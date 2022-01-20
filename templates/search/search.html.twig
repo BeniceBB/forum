@@ -1,37 +1,19 @@
 <div id="search">
-    <form action="" method="post" id="searchForm">
+    {{ form_start(searchForm, {'attr': {'id': 'searchForm'}}) }}
+    <div class="form-group">
+        {{ form_widget(searchForm.search) }}
+    </div>
+    <div class="form-group">
+        <label>{% trans %}label.search_in{% endtrans %}:</label>
+        {{ form_widget(searchForm.type) }}
+    </div>
+    <div class="form-group">
+        <label>{% trans %}label.amountfilter{% endtrans %}</label>
+        {{ form_widget(searchForm.amountfilter) }}
+    </div>
 
-        <input type="search" id="search" name="search" class="form-control" placeholder="Zoeken"/>
-
-        <br>
-
-        <div class="types">
-            <input type="checkbox" id="all" name="all" checked>
-            <label for="all">Alle</label>
-            <input type="checkbox" id="title" name="title">
-            <label for="title">Titel</label>
-            <input type="checkbox" id="shortDescription" name="shortDescription">
-            <label for="shortDescription">Omschrijving</label>
-            <input type="checkbox" id="content" name="content">
-            <label for="content">Bericht</label>
-            <input type="checkbox" id="user" name="user">
-            <label for="user">Auteur</label>
-        </div>
-
-        <br>
-
-        <label for="offset">Berichten per pagina</label>
-        <select name="offset">
-            <option value="5">5</option>
-            <option value="5">10</option>
-            <option value="5">25</option>
-            <option value="5">50</option>
-        </select>
-
-        <br>
-
-        <button type="submit" class="btn btn-dark">Search</button>
-    </form>
+    <button type="submit" class="btn btn-dark">{% trans %}form.search{% endtrans %}</button>
+    {{ form_end(searchForm) }}
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -42,14 +24,14 @@
             var form = new FormData(this);
             $.ajax({
                 type: 'POST',
-                url: 'http://localhost/search',
+                url: '/search',
                 data: form,
                 processData: false,
                 contentType: false,
             }).done(function (data) {
                 $('#blogtable').html(data.result);
 
-                $('#blogtable').data("number-of-blogs", JSON.parse(data.offset));
+                $('#blogtable').data('number-of-blogs', JSON.parse(data.offset));
             }).fail(function (data) {
             });
         });
