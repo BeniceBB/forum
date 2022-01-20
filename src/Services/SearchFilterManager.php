@@ -35,6 +35,14 @@ class SearchFilterManager
                 $contains_description = 0;
                 $contains_author = 0;
                 $contains_title = 0;
+                // if(in_array($type, $filteredTypes){
+                // $content = strtolower($doBlogGetSomethingFunction)
+                // if(str_contains($content, $wordtoSearch) !== false){
+                // $varCreatedByFunction = 1;
+                //  }
+                // }
+
+
                 if (in_array('title', $filteredTypes))
                     {
                         $content = strtolower($blog->getTitle());
