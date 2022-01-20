@@ -19,10 +19,17 @@ class SearchFilterManager
 
         $blogs = $this->blogRepository->findAll(); // array with objects
         if (!empty($data)) {
-            $filteredblogs = [];
-            dump($data['type']);exit;
+            $filteredBlogs = [];
+            $filteredTypes = [];
 
-            $searchParm = ['wordToSearch' => $data['search'], 'type' => [$data['type']]];
+            if(!empty($data['type']))
+            {
+                foreach($data['type'] as $key => $value)
+                {
+                    $filteredTypes[] = $value;
+                }
+            }
+            $searchParm = ['wordToSearch' => $data['search'], 'type' => $filteredTypes];
 
             $wordtoSearch = strtolower($searchParm['wordToSearch']);
             foreach ($blogs as $blog) {
@@ -47,16 +54,16 @@ class SearchFilterManager
                 }
 
                 if (str_contains($content, $wordtoSearch) !== false) {
-                    $filteredblogs[] = $blog;
+                    $filteredBlogs[] = $blog;
                 }
             }
         }
 
         $totalBlogs = count($blogs);
 
-        if (isset($filteredblogs)) {
-            $blogs = $filteredblogs;
-            $totalBlogs = count($filteredblogs);
+        if (isset($filteredBlogs)) {
+            $blogs = $filteredBlogs;
+            $totalBlogs = count($filteredBlogs);
         }
 
         $amountToShow = ['input' => 7];
