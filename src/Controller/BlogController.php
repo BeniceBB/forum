@@ -61,14 +61,15 @@ class BlogController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $offset = 0;
+            $offset = $data['amountfilter'];
 //            $searchInput = $data['search'];
-
         }
         $filteredBlogs = $this->searchFilterManager->getBlogs($data, $offset);
         return $this->json([
             'result' => $this->renderView('blog/blogtable.html.twig', [
             'blogs' => $filteredBlogs,
+            'post_amount' => $this->translator->trans('post.amount', ['amount' => count($filteredBlogs)]),
+
             ]),
             'offset' => $offset,
         ]);
