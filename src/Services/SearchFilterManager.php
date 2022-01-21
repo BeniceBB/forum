@@ -2,20 +2,34 @@
 
 namespace App\Services;
 
+use App\Entity\Blog;
 use App\Repository\BlogRepository;
 
 class SearchFilterManager
 {
-    private BlogRepository $blogRepository;
+    private BlogListManager $blogListManager;
 
-    public function __construct(BlogRepository $blogRepository)
+    public function __construct(BlogListManager $blogListManager)
     {
-        $this->blogRepository = $blogRepository;
+        $this->blogListManager = $blogListManager;
+    }
+
+    public function allToLowerCase(Blog $blog)
+    {
+        $lowercaseTitle = strtolower($blog->getTitle());
+        $lowercaseBody = strtolower($blog->getBody());
+        $lowercaseDescription = strtolower($blog->getShortDescription());
+        $lowercaseAuthor = strtolower($blog->getUser()->getUsername());
+
+        $content = $lowercaseAuthor.$lowercaseBody.$lowercaseDescription.$lowercaseTitle;
+
+        return $content;
     }
 
     public function getBlogs(array $data, int $offset): array
     {
-        $blogs = $this->blogRepository->findAll(); // array with objects
+//        dump($this->blogListManager->getBlogTitles());exit;
+        $blogs = $this->blogListManager->getAllBlogs(); // array with objects
         if (!empty($data)) {
             $filteredblogs = [];
             $filteredTypes = [];
@@ -35,22 +49,16 @@ class SearchFilterManager
                 $contains_description = 0;
                 $contains_author = 0;
                 $contains_title = 0;
-                // if(in_array($type, $filteredTypes){
-                // $content = strtolower($doBlogGetSomethingFunction)
-                // if(str_contains($content, $wordtoSearch) !== false){
-                // $varCreatedByFunction = 1;
-                //  }
-                // }
-
 
                 if (in_array('title', $filteredTypes))
-                    {
-                        $content = strtolower($blog->getTitle());
-                        if (str_contains($content, $wordtoSearch) !== false) {
-                            $contains_title = 1;
-                        }
+                {
+                    $content = strtolower($blog->getTitle());
+                    if (str_contains($content, $wordtoSearch) !== false) {
+                        $contains_description = 1;
                     }
-                if (in_array('description', $filteredTypes))
+                }
+
+                           if (in_array('description', $filteredTypes))
                     {
                         $content = strtolower($blog->getShortDescription());
                         if (str_contains($content, $wordtoSearch) !== false) {
@@ -92,7 +100,6 @@ class SearchFilterManager
             }
         }
 
-        $totalBlogs = count($blogs);
 
         if (isset($filteredblogs)) {
 

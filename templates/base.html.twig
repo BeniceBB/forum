@@ -66,7 +66,7 @@
             .custom-container {
                 background-color: whitesmoke !important;
                 z-index: 1;
-                position: absolute;
+                position: relative;
                 width: 70%;
                 margin-left: 15%;
                 margin-top: 15px;
@@ -92,6 +92,13 @@
                 font-size: 15px;
                 margin-top: 50px;
             }
+
+            .footer{
+                width: 100vw;
+                height: 100px;
+                background-color: white;
+                margin-top: 50px;
+            }
         </style>
     {% endblock %}
 
@@ -113,5 +120,8 @@
 {% endblock %}
 
 {% block body %}{% endblock %}
+{% block footer %}
+    <div class="footer"></div>
+{% endblock %}
 </body>
 </html>

@@ -46,8 +46,6 @@ class BlogController extends AbstractController
             'post_amount' => $this->translator->trans('post.amount', ['amount' => count($filteredBlogs)]),
             'searchForm' => $form->createView(),
         ]);
-
-
     }
 
     /**
@@ -62,7 +60,6 @@ class BlogController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $offset = $data['amountfilter'];
-//            $searchInput = $data['search'];
         }
         $filteredBlogs = $this->searchFilterManager->getBlogs($data, $offset);
         return $this->json([
