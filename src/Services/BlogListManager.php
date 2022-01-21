@@ -21,23 +21,61 @@ class BlogListManager
         return $blogs;
     }
 
-    public function getBlogTitles(){
-        $blogs = $this->getAllBlogs();
-        $blogtitles = [];
-        foreach ($blogs as $blog)
+    public function checkBlogTitles($blog, $wordtoSearch){
+        $contains_title = 0;
+
+        $content = strtolower($blog->getTitle());
+        if(str_contains($content, $wordtoSearch) !== false)
         {
-            $blogtitles[] = strtolower($blog->getTitle());
+            $contains_title = 1;
         }
-        return $blogtitles;
+        return $contains_title;
     }
 
-    public function getBlogDescriptions(){
-        $blogs = $this->getAllBlogs();
-        $blogdescriptions = [];
-        foreach ($blogs as $blog)
+    public function checkBlogDescriptions($blog, $wordtoSearch){
+        $contains_description = 0;
+
+            $content = strtolower($blog->getShortDescription());
+            if(str_contains($content, $wordtoSearch) !== false)
+            {
+                $contains_description = 1;
+            }
+        return $contains_description;
+    }
+
+    public function checkBlogPost($blog, $wordtoSearch){
+        $contains_post = 0;
+
+        $content = strtolower($blog->getBody());
+        if(str_contains($content, $wordtoSearch) !== false)
         {
-            $blogdescriptions[] = strtolower($blog->getShortDescription());
+            $contains_post = 1;
         }
-        return $blogdescriptions;
+        return $contains_post;
+    }
+
+    public function checkBlogAuthor($blog, $wordtoSearch){
+        $contains_author = 0;
+
+        $content = strtolower($blog->getUser()->getUsername());
+        if(str_contains($content, $wordtoSearch) !== false)
+        {
+            $contains_author = 1;
+        }
+        return $contains_author;
+    }
+
+    public function checkBlogAll($blog, $wordtoSearch){
+        $contains_all = 0;
+
+        $content = strtolower($blog->getUser()->getUsername())
+        . ' ' . $content = strtolower($blog->getBody())
+        . ' ' . $content = strtolower($blog->getShortDescription())
+        . ' ' . $content = strtolower($blog->getUser()->getUsername());
+        if(str_contains($content, $wordtoSearch) !== false)
+        {
+            $contains_all = 1;
+        }
+        return $contains_all;
     }
 }
