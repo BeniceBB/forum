@@ -37,10 +37,10 @@ class BlogController extends AbstractController
      *
      * @return Response
      */
-    public function index(array $data = [], int $offset = 0): Response
+    public function index(): Response
     {
         $form = $this->createForm(SearchFormType::class);
-        $filteredBlogs = $this->searchFilterManager->getBlogs($data, $offset);
+        $filteredBlogs = $this->searchFilterManager->getBlogs(['type' => ['all']], 0);
         return $this->render('blog/list.html.twig', [
             'blogs' => $filteredBlogs,
             'post_amount' => $this->translator->trans('post.amount', ['amount' => count($filteredBlogs)]),
@@ -59,7 +59,7 @@ class BlogController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $offset = $data['amountfilter'];
+            $offset = $data['postsPerPage'];
         }
         $filteredBlogs = $this->searchFilterManager->getBlogs($data, $offset);
         return $this->json([

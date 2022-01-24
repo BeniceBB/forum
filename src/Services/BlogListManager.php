@@ -3,7 +3,6 @@
 
 namespace App\Services;
 
-
 use App\Repository\BlogRepository;
 
 class BlogListManager
@@ -17,71 +16,71 @@ class BlogListManager
 
     public function getAllBlogs(): array
     {
-        $blogs = $this->blogRepository->findAll(); // array with objects
-        return $blogs;
+        return $this->blogRepository->findAll();
     }
 
-    public function checkBlogTitles($blog, $wordtoSearch, $filteredTypes){
-        $contains_title = 0;
-        if (in_array('title', $filteredTypes)) {
-
-            $content = strtolower($blog->getTitle());
-            if (str_contains($content, $wordtoSearch) !== false) {
-                $contains_title = 1;
+    public function checkPostByType(string $type, array $filteredTypes, string $wordToSearch, ?string $value = ''): bool
+    {
+        $contains = false;
+        if (in_array($type, $filteredTypes, true)) {
+            $content = strtolower($value);
+            if (str_contains($content, $wordToSearch) !== false) {
+                $contains = true;
             }
         }
-        return $contains_title;
+        return $contains;
     }
 
-    public function checkBlogDescriptions($blog, $wordtoSearch, $filteredTypes){
-        $contains_description = 0;
+    public function getFilters(array $data): array
+    {
+        $filteredTypes = [];
+        $filters = $data['type'] ?? [];
+        if ($data['type'] === [] || in_array('all', $filters, true)) {
+            $filteredTypes = ['title', 'description', 'post', 'author'];
+        }
+        foreach ($filters as $value) {
+            $filteredTypes[] = $value;
+        }
 
-        if(in_array('description', $filteredTypes)) {
+        return $filteredTypes;
+    }
 
-            $content = strtolower($blog->getShortDescription());
-            if (str_contains($content, $wordtoSearch) !== false) {
-                $contains_description = 1;
+    public function getWordToSearch(array $data): string
+    {
+        return strtolower($data['search'] ?? '');
+    }
+
+    public function getFilteredBlogs(array $blogs, array $filters, string $wordToSearch): array
+    {
+        $filteredBlogs = [];
+        foreach ($blogs as $blog) {
+            $containsTitle = $this->checkPostByType('title', $filters, $wordToSearch, $blog->getTitle());
+            $containsDescription = $this->checkPostByType('description', $filters, $wordToSearch, $blog->getShortDescription());
+            $containsPost = $this->checkPostByType('post', $filters, $wordToSearch, $blog->getBody());
+            $containsAuthor = $this->checkPostByType('author', $filters, $wordToSearch, $blog->getUser()->getUsername());
+
+            if ($containsTitle === true || $containsDescription === true || $containsPost === true || $containsAuthor === true) {
+                $filteredBlogs[] = $blog;
             }
         }
-        return $contains_description;
+
+
+        return $filteredBlogs;
     }
 
-    public function checkBlogPost($blog, $wordtoSearch, $filteredTypes){
-        $contains_post = 0;
-        if (in_array('post', $filteredTypes)) {
-
-            $content = strtolower($blog->getBody());
-            if (str_contains($content, $wordtoSearch) !== false) {
-                $contains_post = 1;
-            }
+    public function limitBlogs(array $blogs, array $data, array $filteredBlogs): array
+    {
+        $offset = 0;
+        $limit = array_slice($blogs, $offset, $offset + 5);
+        if(isset($data['postsPerPage'])) {
+            $postsPerPage = $data['postsPerPage'];
+            $limit = array_slice($filteredBlogs, $offset, $offset + $postsPerPage);
+            $counted = count($filteredBlogs) - $postsPerPage;
+//            dump($counted);exit;
         }
-        return $contains_post;
+        return $limit;
+
     }
 
-    public function checkBlogAuthor($blog, $wordtoSearch, $filteredTypes){
-        $contains_author = 0;
-        if (in_array('author', $filteredTypes)) {
 
-            $content = strtolower($blog->getUser()->getUsername());
-            if (str_contains($content, $wordtoSearch) !== false) {
-                $contains_author = 1;
-            }
-        }
-        return $contains_author;
-    }
-
-    public function checkBlogAll($blog, $wordtoSearch, $filteredTypes){
-        $contains_all = 0;
-        if (in_array('all', $filteredTypes) || empty($filteredTypes)) {
-
-            $content = strtolower($blog->getUser()->getUsername())
-                . ' ' . $content = strtolower($blog->getBody())
-                    . ' ' . $content = strtolower($blog->getShortDescription())
-                        . ' ' . $content = strtolower($blog->getUser()->getUsername());
-            if (str_contains($content, $wordtoSearch) !== false) {
-                $contains_all = 1;
-            }
-        }
-        return $contains_all;
-    }
 }
