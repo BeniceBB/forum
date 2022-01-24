@@ -14,7 +14,17 @@
 
     <button type="submit" class="btn btn-dark">{% trans %}form.search{% endtrans %}</button>
     {{ form_end(searchForm) }}
+
+
+    <a href="#" id="prev" data-page="" class="hidden">prev</a>
+    <a href="#" id="next" data-page="1">next</a>
+
 </div>
+<style>
+    .hidden {
+        display: none;
+    }
+</style>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
@@ -31,9 +41,71 @@
             }).done(function (data) {
                 $('#blogtable').html(data.result);
 
-                $('#blogtable').data('number-of-blogs', JSON.parse(data.offset));
             }).fail(function (data) {
             });
         });
-    });
+
+        function showAndHideButtons(data) {
+            let prevPage = data.page - 1;
+            console.log(data.page);
+            if (prevPage < 0) {
+                prevPage = 0;
+            }
+            $('#prev').data('page', prevPage);
+            $('#next').data('page', data.page + 1);
+        }
+
+        $('#prev').click(function (e) {
+            e.preventDefault();
+            var form = new FormData($('#searchForm')[0]);
+            var page = $('#prev').data('page');
+            $.ajax({
+                type: 'POST',
+                url: '/search/' + page,
+                data: form,
+                processData: false,
+                contentType: false,
+            }).done(function (data) {
+                $('#blogtable').html(data.result);
+                if (data.numberOfBlogs > 0) {
+                    $('#prev').show();
+                }
+                if (data.numberOfBlogs < 0)
+                {
+                    $('#next').show();
+                }
+                showAndHideButtons(data);
+
+
+
+            }).fail(function (data) {
+            });
+        });
+
+        $('#next').click(function (e) {
+            e.preventDefault();
+            var form = new FormData($('#searchForm')[0]);
+            var page = $('#next').data('page');
+            $.ajax({
+                type: 'POST',
+                url: '/search/' + page,
+                data: form,
+                processData: false,
+                contentType: false,
+            }).done(function (data) {
+                $('#blogtable').html(data.result);
+                if (data.numberOfBlogs < data.numberOfBlogsPerPage) {
+                    $('#next').hide();
+                }
+
+                $('#prev').show();
+                showAndHideButtons(data);
+
+            }).fail(function (data) {
+            });
+        });
+
+
+
+        });
 </script>

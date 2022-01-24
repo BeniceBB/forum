@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Services;
 
 use App\Repository\BlogRepository;
@@ -63,24 +62,17 @@ class BlogListManager
                 $filteredBlogs[] = $blog;
             }
         }
-
-
         return $filteredBlogs;
     }
 
-    public function limitBlogs(array $blogs, array $data, array $filteredBlogs): array
+    public function limitBlogs(array $data, array $filteredBlogs, int $page): array
     {
-        $offset = 0;
-        $limit = array_slice($blogs, $offset, $offset + 5);
-        if(isset($data['postsPerPage'])) {
-            $postsPerPage = $data['postsPerPage'];
-            $limit = array_slice($filteredBlogs, $offset, $offset + $postsPerPage);
-            $counted = count($filteredBlogs) - $postsPerPage;
-//            dump($counted);exit;
-        }
-        return $limit;
+        $postsPerPage = $data['postsPerPage'] ?? 5;
 
+        return array_slice($filteredBlogs, $page * $postsPerPage, $postsPerPage);
     }
+
+
 
 
 }

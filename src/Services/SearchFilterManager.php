@@ -11,7 +11,7 @@ class SearchFilterManager
         $this->blogListManager = $blogListManager;
     }
 
-    public function getBlogs(array $data, int $offset = 0): array
+    public function getBlogs(array $data, int $page = 0): array
     {
         $result = [];
         if (!empty($data)) {
@@ -19,7 +19,7 @@ class SearchFilterManager
             $filters = $this->blogListManager->getFilters($data);
             $wordToSearch = $this->blogListManager->getWordToSearch($data);
             $filteredBlogs = $this->blogListManager->getFilteredBlogs($blogs, $filters, $wordToSearch);
-            $result = $this->blogListManager->limitBlogs($blogs, $data, $filteredBlogs);
+            $result = $this->blogListManager->limitBlogs($data, $filteredBlogs, $page);
         }
         return $result;
     }

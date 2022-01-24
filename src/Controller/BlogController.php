@@ -7,6 +7,7 @@ use App\Form\Type\BlogFormType;
 use App\Form\Type\SearchFormType;
 use App\Repository\BlogRepository;
 use App\Services\BlogContentManager;
+use App\Services\BlogListManager;
 use App\Services\SearchFilterManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
@@ -24,12 +25,14 @@ class BlogController extends AbstractController
     private $entityManager;
     private $translator;
     private SearchFilterManager $searchFilterManager;
+    private BlogListManager $blogListManager;
 
-    public function __construct(EntityManagerInterface $entityManager, TranslatorInterface $translator, SearchFilterManager $searchFilterManager)
+    public function __construct(EntityManagerInterface $entityManager, TranslatorInterface $translator, SearchFilterManager $searchFilterManager, BlogListManager $blogListManager)
     {
         $this->entityManager = $entityManager;
         $this->translator = $translator;
         $this->searchFilterManager = $searchFilterManager;
+        $this->blogListManager = $blogListManager;
     }
 
     /**
@@ -40,36 +43,38 @@ class BlogController extends AbstractController
     public function index(): Response
     {
         $form = $this->createForm(SearchFormType::class);
-        $filteredBlogs = $this->searchFilterManager->getBlogs(['type' => ['all']], 0);
+        $filteredBlogs = $this->searchFilterManager->getBlogs(['type' => ['all']]);
         return $this->render('blog/list.html.twig', [
             'blogs' => $filteredBlogs,
             'post_amount' => $this->translator->trans('post.amount', ['amount' => count($filteredBlogs)]),
             'searchForm' => $form->createView(),
+            'page' => 0,
         ]);
     }
 
     /**
-     * @Route("/search", name="blogsearch" )
+     * @Route("/search/{page}", name="blogsearch" )
      *
      * @return Response
      */
-    public function search(Request $request, int $offset = 0): Response
+    public function search(Request $request, ?int $page = 0): Response
     {
         $form = $this->createForm(SearchFormType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $offset = $data['postsPerPage'];
+            $filteredBlogs = $this->searchFilterManager->getBlogs($data, $page);
+            return $this->json([
+                'result' => $this->renderView('blog/blogtable.html.twig', [
+                    'blogs' => $filteredBlogs,
+                    'post_amount' => $this->translator->trans('post.amount', ['amount' => count($filteredBlogs)]),
+                ]),
+                'page' => $page,
+                'numberOfBlogs' => count($filteredBlogs),
+                'numberOfBlogsPerPage' => $data['postsPerPage'] ?? 5,
+            ]);
         }
-        $filteredBlogs = $this->searchFilterManager->getBlogs($data, $offset);
-        return $this->json([
-            'result' => $this->renderView('blog/blogtable.html.twig', [
-            'blogs' => $filteredBlogs,
-            'post_amount' => $this->translator->trans('post.amount', ['amount' => count($filteredBlogs)]),
-
-            ]),
-            'offset' => $offset,
-        ]);
+        return $this->json('error', 503);
     }
 
     /**
