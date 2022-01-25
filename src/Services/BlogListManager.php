@@ -13,6 +13,7 @@ class BlogListManager
         $this->blogRepository = $blogRepository;
     }
 
+
     public function getAllBlogs(): array
     {
         return $this->blogRepository->findAll();
@@ -62,17 +63,19 @@ class BlogListManager
                 $filteredBlogs[] = $blog;
             }
         }
+
         return $filteredBlogs;
+    }
+
+    public function totalFilteredBlogs(array $filteredBlogs): int
+    {
+        return count($filteredBlogs);
     }
 
     public function limitBlogs(array $data, array $filteredBlogs, int $page): array
     {
         $postsPerPage = $data['postsPerPage'] ?? 5;
-
         return array_slice($filteredBlogs, $page * $postsPerPage, $postsPerPage);
     }
-
-
-
 
 }

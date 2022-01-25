@@ -44,9 +44,12 @@ class BlogController extends AbstractController
     {
         $form = $this->createForm(SearchFormType::class);
         $filteredBlogs = $this->searchFilterManager->getBlogs(['type' => ['all']]);
+        $totalFilteredBlogs = $this->searchFilterManager->totalFilteredBlogs(['type' => ['all']]);
+
         return $this->render('blog/list.html.twig', [
             'blogs' => $filteredBlogs,
             'post_amount' => $this->translator->trans('post.amount', ['amount' => count($filteredBlogs)]),
+            'totalFilteredBlogs' => $totalFilteredBlogs,
             'searchForm' => $form->createView(),
             'page' => 0,
         ]);
@@ -61,17 +64,27 @@ class BlogController extends AbstractController
     {
         $form = $this->createForm(SearchFormType::class);
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $filteredBlogs = $this->searchFilterManager->getBlogs($data, $page);
+            $totalFilteredBlogs = $this->searchFilterManager->totalFilteredBlogs($data);
+            $numberOfBlogs = count($filteredBlogs);
+            $currentAmountBlogs = ($page + 1) * $numberOfBlogs;
+            $numberOfBlogsPerPage = $data['postsPerPage'] ?? 5;
+            if($numberOfBlogs < $numberOfBlogsPerPage)
+            {
+                $currentAmountBlogs = $totalFilteredBlogs;
+            }
             return $this->json([
                 'result' => $this->renderView('blog/blogtable.html.twig', [
                     'blogs' => $filteredBlogs,
-                    'post_amount' => $this->translator->trans('post.amount', ['amount' => count($filteredBlogs)]),
+                    'post_amount' => $this->translator->trans('post.amount', ['amount' => $currentAmountBlogs]),
+                    'totalFilteredBlogs' => $totalFilteredBlogs,
                 ]),
                 'page' => $page,
-                'numberOfBlogs' => count($filteredBlogs),
-                'numberOfBlogsPerPage' => $data['postsPerPage'] ?? 5,
+                'numberOfBlogs' => $numberOfBlogs,
+                'numberOfBlogsPerPage' => $numberOfBlogsPerPage,
             ]);
         }
         return $this->json('error', 503);
