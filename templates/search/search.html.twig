@@ -28,20 +28,19 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
-    function hideButton(firstValue, secondValue, buttonId) {
-        if (firstValue < secondValue) {
-            $(buttonId).hide();
-        }
-    }
-
-    function showButton(firstValue, secondValue, buttonId) {
-        if (firstValue > secondValue) {
+    function showButtons(condition, buttonId) {
+        if (condition) {
             $(buttonId).show();
         }
     }
 
-    function setPages(firstValue, pageValue)
-    {
+    function hideButtons(condition, buttonId) {
+        if (condition) {
+            $(buttonId).hide();
+        }
+    }
+
+    function setPages(firstValue, pageValue) {
         if (firstValue < 0) {
             firstValue = 0;
         }
@@ -50,92 +49,55 @@
         $('#next').data('page', pageValue + 1);
     }
 
-    $.ajaxSetup({
-        type: 'POST',
-        url: '/search/0',
-        processData: false,
-        contentType: false,
-    });
-
-    $(document).ready(function () {
-
-
-        var form = new FormData($('#searchForm')[0]);
-
-        $('#searchForm').submit(function (e) {
+    function buttonClicked(buttonId) {
+        $(buttonId).click(function (e) {
             e.preventDefault();
-
-            var form = new FormData(this);
-
+            var form = new FormData($('#searchForm')[0]);
+            var page = $(buttonId).data('page');
             $.ajax({
+                url: '/search/' + page,
                 data: form,
-
             }).done(function (data) {
-                data.page = 0;
-
                 $('#blogtable').html(data.result);
-
-                hideButton(data.numberOfBlogs, data.numberOfBlogsPerPage, '#next');
-
-                if (data.numberOfBlogs >= data.numberOfBlogsPerPage) {
-                    $('#next').show();
+                if (buttonId === '#next') {
+                    hideButtons(data.numberOfBlogs < data.numberOfBlogsPerPage, '#next');
+                    showButtons(data.numberOfBlogs > data.numberOfBlogsPerPage, '#next');
+                    showButtons(1 === 1, '#prev');
                 }
-
-                $('#prev').hide();
-                $('#next').data('page', data.page + 1);
-
-            }).fail(function (data) {
-            });
-        });
-
-        // Click on prev button
-        $('#prev').click(function (e) {
-            e.preventDefault();
-            var page = $('#prev').data('page');
-
-            // ajaxRequest
-            $.ajax({
-                url: '/search/' + page,
-                data: form,
-            })
-                .done(function (data) {
-
-
-                    // Set blogtable
-                    $('#blogtable').html(data.result);
-
-                    // Check or prev button should be hidden or visible
-                    showButton(data.numberOfBlogs, 0, '#prev');
-
-                    if (data.page === 0) {
-                        $('#prev').hide();
-                    }
-                    $('#next').show();
-
-                    // Set prevPage
-                    let prevPage = data.page - 1;
-                    setPages(prevPage, data.page);
-                });
-        });
-
-
-        $('#next').click(function (e) {
-            e.preventDefault();
-            var page = $('#next').data('page');
-            $.ajax({
-                url: '/search/' + page,
-                data: form,
-            }).done(function (data) {
-                $('#blogtable').html(data.result);
-                hideButton(data.numberOfBlogs, data.numberOfBlogsPerPage, '#next');
-                showButton(data.numberOfBlogs, data.numberOfBlogsPerPage, '#next');
-
-                $('#prev').show();
-
-                // Set prevPage
+                if (buttonId === '#prev') {
+                    showButtons(data.numberOfBlogs > 0, '#prev');
+                    hideButtons(data.page === 0, '#prev');
+                    showButtons(1 === 1, '#next');
+                }
                 let prevPage = data.page - 1;
                 setPages(prevPage, data.page);
             });
         });
+    }
+
+    $(document).ready(function () {
+
+        $('#searchForm').submit(function (e) {
+            e.preventDefault();
+            var form = new FormData(this);
+            $.ajax({
+                type: 'POST',
+                url: '/search/0',
+                data: form,
+                processData: false,
+                contentType: false,
+            }).done(function (data) {
+                data.page = 0;
+                $('#blogtable').html(data.result);
+                hideButtons(data.numberOfBlogs < data.numberOfBlogsPerPage, '#next');
+                showButtons(data.numberOfBlogs >= data.numberOfBlogsPerPage, '#next');
+                $('#prev').hide();
+                $('#next').data('page', data.page + 1);
+            });
+        });
+
+        buttonClicked('#prev');
+        buttonClicked('#next');
+
     });
 </script>

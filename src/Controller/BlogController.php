@@ -69,10 +69,9 @@ class BlogController extends AbstractController
             $data = $form->getData();
             $filteredBlogs = $this->searchFilterManager->getBlogs($data, $page);
             $totalFilteredBlogs = $this->searchFilterManager->totalFilteredBlogs($data);
-            $numberOfBlogs = count($filteredBlogs);
-            $currentAmountBlogs = ($page + 1) * $numberOfBlogs;
+            $currentAmountBlogs = ($page + 1) * count($filteredBlogs);
             $numberOfBlogsPerPage = $data['postsPerPage'] ?? 5;
-            if($numberOfBlogs < $numberOfBlogsPerPage)
+            if(count($filteredBlogs) < $numberOfBlogsPerPage)
             {
                 $currentAmountBlogs = $totalFilteredBlogs;
             }
@@ -83,7 +82,7 @@ class BlogController extends AbstractController
                     'totalFilteredBlogs' => $totalFilteredBlogs,
                 ]),
                 'page' => $page,
-                'numberOfBlogs' => $numberOfBlogs,
+                'numberOfBlogs' => count($filteredBlogs),
                 'numberOfBlogsPerPage' => $numberOfBlogsPerPage,
             ]);
         }
