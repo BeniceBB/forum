@@ -40,14 +40,14 @@
         }
     }
 
-    function setPages(prevPage, page)
+    function setPages(firstValue, pageValue)
     {
-        if (prevPage < 0) {
-            prevPage = 0;
+        if (firstValue < 0) {
+            firstValue = 0;
         }
 
-        $('#prev').data('page', prevPage);
-        $('#next').data('page', page + 1);
+        $('#prev').data('page', firstValue);
+        $('#next').data('page', pageValue + 1);
     }
 
     $.ajaxSetup({
@@ -110,13 +110,11 @@
                     if (data.page === 0) {
                         $('#prev').hide();
                     }
-
-                    // Make next button visible
                     $('#next').show();
 
                     // Set prevPage
                     let prevPage = data.page - 1;
-                    setPages(prevPage, page);
+                    setPages(prevPage, data.page);
                 });
         });
 
@@ -124,20 +122,19 @@
         $('#next').click(function (e) {
             e.preventDefault();
             var page = $('#next').data('page');
-
             $.ajax({
                 url: '/search/' + page,
                 data: form,
-
             }).done(function (data) {
-
                 $('#blogtable').html(data.result);
                 hideButton(data.numberOfBlogs, data.numberOfBlogsPerPage, '#next');
                 showButton(data.numberOfBlogs, data.numberOfBlogsPerPage, '#next');
+
                 $('#prev').show();
 
+                // Set prevPage
                 let prevPage = data.page - 1;
-                setPages(prevPage, page);
+                setPages(prevPage, data.page);
             });
         });
     });
