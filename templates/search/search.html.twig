@@ -49,31 +49,13 @@
         $('#next').data('page', pageValue + 1);
     }
 
-    function buttonClicked(buttonId) {
-        $(buttonId).click(function (e) {
-            e.preventDefault();
-            var form = new FormData($('#searchForm')[0]);
-            var page = $(buttonId).data('page');
-            $.ajax({
-                url: '/search/' + page,
-                data: form,
-            }).done(function (data) {
-                $('#blogtable').html(data.result);
-                if (buttonId === '#next') {
-                    hideButtons(data.numberOfBlogs < data.numberOfBlogsPerPage, '#next');
-                    showButtons(data.numberOfBlogs > data.numberOfBlogsPerPage, '#next');
-                    showButtons(1 === 1, '#prev');
-                }
-                if (buttonId === '#prev') {
-                    showButtons(data.numberOfBlogs > 0, '#prev');
-                    hideButtons(data.page === 0, '#prev');
-                    showButtons(1 === 1, '#next');
-                }
-                let prevPage = data.page - 1;
-                setPages(prevPage, data.page);
-            });
-        });
-    }
+    $.ajaxSetup({
+        type: 'POST',
+        url: '/search/0',
+        processData: false,
+        contentType: false,
+    })
+
 
     $(document).ready(function () {
 
@@ -81,11 +63,7 @@
             e.preventDefault();
             var form = new FormData(this);
             $.ajax({
-                type: 'POST',
-                url: '/search/0',
                 data: form,
-                processData: false,
-                contentType: false,
             }).done(function (data) {
                 data.page = 0;
                 $('#blogtable').html(data.result);
@@ -93,11 +71,76 @@
                 showButtons(data.numberOfBlogs >= data.numberOfBlogsPerPage, '#next');
                 $('#prev').hide();
                 $('#next').data('page', data.page + 1);
+
+            }).fail(function (data) {
             });
         });
 
-        buttonClicked('#prev');
-        buttonClicked('#next');
+        $('#prev').click(function (e) {
+            e.preventDefault();
+            var form = new FormData($('#searchForm')[0]);
+            var page = $('#prev').data('page');
 
+            $.ajax({
+                url: '/search/' + page,
+                data: form,
+            })
+                .done(function (data) {
+                    $('#blogtable').html(data.result);
+                    showButtons(data.numberOfBlogs > 0, '#prev');
+                    hideButtons(data.page === 0, '#prev');
+                    showButtons(1 === 1, '#next');
+                    // $('#next').show();
+
+                    let prevPage = data.page - 1;
+                    setPages(prevPage, data.page);
+
+                });
+        });
+
+
+        $('#next').click(function (e) {
+            e.preventDefault();
+            var form = new FormData($('#searchForm')[0]);
+            var page = $('#next').data('page');
+            $.ajax({
+                url: '/search/' + page,
+                data: form,
+            }).done(function (data) {
+                $('#blogtable').html(data.result);
+
+                hideButtons(data.numberOfBlogs < data.numberOfBlogsPerPage, '#next');
+                showButtons(data.numberOfBlogs > data.numberOfBlogsPerPage, '#next');
+                showButtons(1 === 1, '#prev');
+
+                let prevPage = data.page - 1;
+                setPages(prevPage, data.page);
+            }).fail(function (data) {
+            });
+        });
     });
+
+    // function buttonClicked(buttonId) {
+    //     e.preventDefault();
+    //     var form = new FormData($('#searchForm')[0]);
+    //     var page = $(buttonId).data('page');
+    //     $.ajax({
+    //         url: '/search/' + page,
+    //         data: form,
+    //     }).done(function (data) {
+    //         $('#blogtable').html(data.result);
+    //         if (buttonId === '#next') {
+    //             hideButtons(data.numberOfBlogs < data.numberOfBlogsPerPage, '#next');
+    //             showButtons(data.numberOfBlogs > data.numberOfBlogsPerPage, '#next');
+    //             showButtons(1 === 1, '#prev');
+    //         }
+    //         if (buttonId === '#prev') {
+    //             showButtons(data.numberOfBlogs > 0, '#prev');
+    //             hideButtons(data.page === 0, '#prev');
+    //             showButtons(1 === 1, '#next');
+    //         }
+    //         let prevPage = data.page - 1;
+    //         setPages(prevPage, data.page);
+    //     });
+    // }
 </script>
