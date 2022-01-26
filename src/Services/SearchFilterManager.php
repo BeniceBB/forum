@@ -11,7 +11,7 @@ class SearchFilterManager
         $this->blogListManager = $blogListManager;
     }
 
-    public function filterBlogs(array $data)
+    public function filterBlogs(array $data): array
     {
         $result = [];
         if (!empty($data)) {

@@ -22,17 +22,15 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BlogController extends AbstractController
 {
-    private $entityManager;
-    private $translator;
+    private EntityManagerInterface $entityManager;
+    private TranslatorInterface $translator;
     private SearchFilterManager $searchFilterManager;
-    private BlogListManager $blogListManager;
 
-    public function __construct(EntityManagerInterface $entityManager, TranslatorInterface $translator, SearchFilterManager $searchFilterManager, BlogListManager $blogListManager)
+    public function __construct(EntityManagerInterface $entityManager, TranslatorInterface $translator, SearchFilterManager $searchFilterManager)
     {
         $this->entityManager = $entityManager;
         $this->translator = $translator;
         $this->searchFilterManager = $searchFilterManager;
-        $this->blogListManager = $blogListManager;
     }
 
     /**

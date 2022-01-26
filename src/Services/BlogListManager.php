@@ -67,11 +67,6 @@ class BlogListManager
         return $filteredBlogs;
     }
 
-    public function totalFilteredBlogs(array $filteredBlogs): int
-    {
-        return count($filteredBlogs);
-    }
-
     public function limitBlogs(array $data, array $filteredBlogs, int $page): array
     {
         $postsPerPage = $data['postsPerPage'] ?? 5;

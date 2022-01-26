@@ -54,7 +54,7 @@
         url: '/search/0',
         processData: false,
         contentType: false,
-    })
+    });
 
 
     $(document).ready(function () {
@@ -90,7 +90,6 @@
                     showButtons(data.numberOfBlogs > 0, '#prev');
                     hideButtons(data.page === 0, '#prev');
                     showButtons(1 === 1, '#next');
-                    // $('#next').show();
 
                     let prevPage = data.page - 1;
                     setPages(prevPage, data.page);
@@ -115,8 +114,7 @@
 
                 let prevPage = data.page - 1;
                 setPages(prevPage, data.page);
-            }).fail(function (data) {
-            });
+            })
         });
     });
 
