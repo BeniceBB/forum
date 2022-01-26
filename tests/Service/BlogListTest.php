@@ -8,12 +8,15 @@ use App\Entity\User;
 use App\Repository\BlogRepository;
 use App\Services\BlogListManager;
 use PHPUnit\Framework\TestCase;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class BlogListTest extends TestCase
+class BlogListTest extends WebTestCase
 {
+    /**
+     * @group Unit
+     */
     public function testGetAllBlogs(): void
     {
-
         $blogRepository = $this->createMock(BlogRepository::class);
         $blogRepository->expects(static::once())->method('findAll')->willReturn([new Blog()]);
 
@@ -193,6 +196,5 @@ class BlogListTest extends TestCase
         $result = $blogListManager->limitBlogs($data, $filteredBlogs, $page);
         static::assertCount(1, $result);
     }
-
 
 }

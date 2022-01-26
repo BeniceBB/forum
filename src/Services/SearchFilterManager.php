@@ -34,5 +34,4 @@ class SearchFilterManager
         $filteredBlogs = $this->filterBlogs($data);
         return count($filteredBlogs);
     }
-//
 }
