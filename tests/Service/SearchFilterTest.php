@@ -26,6 +26,10 @@ class SearchFilterTest extends KernelTestCase
         static::assertEmpty($result);
     }
 
+    /**
+     * @group Unit
+     */
+
     public function testFilterBlogs(): void
     {
         $blogListManager = $this->createMock(BlogListManager::class);
@@ -37,6 +41,10 @@ class SearchFilterTest extends KernelTestCase
         $result = $searchFilterManager->filterBlogs($data);
         static::assertIsArray($result);
     }
+
+    /**
+     * @group Unit
+     */
 
     public function testGetBlogs(): void
     {
@@ -51,6 +59,10 @@ class SearchFilterTest extends KernelTestCase
         static::assertIsArray($result);
     }
 
+    /**
+     * @group Unit
+     */
+
     public function testTotalFilteredBlogs(): void
     {
         $blogListManager = $this->createMock(BlogListManager::class);
@@ -59,6 +71,25 @@ class SearchFilterTest extends KernelTestCase
 
         $data = ['search' => 'test', 'type' => ['all'], 'postsPerPage' => 5];
         $result = $searchFilterManager->totalFilteredBlogs($data);
+
+        static::assertIsInt($result);
+    }
+
+    /**
+     * @group Unit
+     */
+
+    public function testCurrentBlogCount(): void
+    {
+        $blogListManager = $this->createMock(BlogListManager::class);
+
+        $searchFilterManager = new SearchFilterManager($blogListManager);
+
+        $page = 0;
+        $filteredBlogs = [new Blog(), new Blog(), new Blog(), new Blog(), new Blog(), new Blog(), new Blog()];
+        $data = ['postsPerPage' => 3];
+
+        $result = $searchFilterManager->currentBlogCount($page, $filteredBlogs, $data);
 
         static::assertIsInt($result);
     }
@@ -186,6 +217,68 @@ class SearchFilterTest extends KernelTestCase
         $this->assertIsInt($result);
         $this->assertEquals(4, $result);
     }
+
+    /**
+     * @group Integration
+     */
+
+    public function testCurrentBlogCountFirstPage(): void
+    {
+        self::bootKernel();
+
+        $container = static::getContainer();
+        $searchFilterManager = $container->get(SearchFilterManager::class);
+
+
+        $page = 0;
+        $data = ['search' => '', 'type' => ['all'], 'postsPerPage' => 3];
+        $filteredBlogs = $searchFilterManager->getBlogs($data, $page);
+
+        $result = $searchFilterManager->currentBlogCount($page, $filteredBlogs, $data);
+        $this->assertIsInt($result);
+        $this->assertEquals(3, $result);
+    }
+
+    /**
+     * @group Integration
+     */
+
+    public function testCurrentBlogCountLastPage(): void
+    {
+        self::bootKernel();
+
+        $container = static::getContainer();
+        $searchFilterManager = $container->get(SearchFilterManager::class);
+
+        $page = 2;
+        $data = ['search' => '', 'type' => ['all'], 'postsPerPage' => 3];
+        $filteredBlogs = $searchFilterManager->getBlogs($data, $page); // 7 blogs
+
+        $result = $searchFilterManager->currentBlogCount($page, $filteredBlogs, $data);
+        $this->assertIsInt($result);
+        $this->assertEquals(7, $result);
+    }
+
+    /**
+     * @group Integration
+     */
+
+    public function testCurrentBlogCountOtherPages(): void
+    {
+        self::bootKernel();
+
+        $container = static::getContainer();
+        $searchFilterManager = $container->get(SearchFilterManager::class);
+
+        $page = 1;
+        $data = ['search' => '', 'type' => ['all'], 'postsPerPage' => 3];
+        $filteredBlogs = $searchFilterManager->getBlogs($data, $page);
+
+        $result = $searchFilterManager->currentBlogCount($page, $filteredBlogs, $data);
+        $this->assertIsInt($result);
+        $this->assertEquals(6, $result);
+    }
+
 
 
 }

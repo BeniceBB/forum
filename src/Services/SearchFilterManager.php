@@ -34,4 +34,17 @@ class SearchFilterManager
         $filteredBlogs = $this->filterBlogs($data);
         return count($filteredBlogs);
     }
+
+    public function currentBlogCount(int $page, array $filteredBlogs, array $data): int
+    {
+        $currentAmountBlogs = ($page + 1) * count($filteredBlogs);
+        $numberOfBlogsPerPage = $data['postsPerPage'] ?? 5;
+        if(count($filteredBlogs) < $numberOfBlogsPerPage)
+        {
+            $currentAmountBlogs = $this->totalFilteredBlogs($data);
+        }
+
+        return $currentAmountBlogs;
+    }
+
 }

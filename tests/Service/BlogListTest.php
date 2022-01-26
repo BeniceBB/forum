@@ -8,9 +8,10 @@ use App\Entity\User;
 use App\Repository\BlogRepository;
 use App\Services\BlogListManager;
 use PHPUnit\Framework\TestCase;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class BlogListTest extends WebTestCase
+class BlogListTest extends KernelTestCase
 {
     /**
      * @group Unit

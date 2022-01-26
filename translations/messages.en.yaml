@@ -46,3 +46,5 @@ registration.password_limit: Your password should be at least {{ limit }} charac
 title.welcome: Welcome!
 title.view_post: View
 title.new_post: New post
+
+from.amount: from

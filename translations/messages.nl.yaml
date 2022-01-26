@@ -46,3 +46,5 @@ registration.password_limit: Je wachtwoord moet minstens {{ limit }} karakters l
 title.welcome: Welkom!
 title.view: Bekijk
 title.new_post: Nieuw bericht
+
+from.amount: van

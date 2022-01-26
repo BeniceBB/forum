@@ -67,12 +67,8 @@ class BlogController extends AbstractController
             $data = $form->getData();
             $filteredBlogs = $this->searchFilterManager->getBlogs($data, $page);
             $totalFilteredBlogs = $this->searchFilterManager->totalFilteredBlogs($data);
-            $currentAmountBlogs = ($page + 1) * count($filteredBlogs);
-            $numberOfBlogsPerPage = $data['postsPerPage'] ?? 5;
-            if(count($filteredBlogs) < $numberOfBlogsPerPage)
-            {
-                $currentAmountBlogs = $totalFilteredBlogs;
-            }
+            $currentAmountBlogs = $this->searchFilterManager->currentBlogCount($page, $filteredBlogs, $data);
+
             return $this->json([
                 'result' => $this->renderView('blog/blogtable.html.twig', [
                     'blogs' => $filteredBlogs,
@@ -81,7 +77,7 @@ class BlogController extends AbstractController
                 ]),
                 'page' => $page,
                 'numberOfBlogs' => count($filteredBlogs),
-                'numberOfBlogsPerPage' => $numberOfBlogsPerPage,
+                'numberOfBlogsPerPage' => $data['postsPerPage'] ?? 5,
             ]);
         }
         return $this->json('error', 503);
