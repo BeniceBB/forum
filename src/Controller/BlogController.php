@@ -5,14 +5,10 @@ namespace App\Controller;
 use App\Entity\Blog;
 use App\Form\Type\BlogFormType;
 use App\Form\Type\SearchFormType;
-use App\Repository\BlogRepository;
 use App\Services\BlogContentManager;
-use App\Services\BlogListManager;
 use App\Services\SearchFilterManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -94,25 +90,21 @@ class BlogController extends AbstractController
     {
         $user = $this->getUser();
 
-        if (!$this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY')) {
-            $blog = new Blog();
-            $form = $this->createForm(BlogFormType::class, $blog);
-            $form->handleRequest($request);
+        $blog = new Blog();
+        $form = $this->createForm(BlogFormType::class, $blog);
+        $form->handleRequest($request);
 
-            if ($form->isSubmitted() && $form->isValid()) {
-                $blog->setUser($user);
-                $this->entityManager->persist($blog);
-                $this->entityManager->flush();
-                $this->addFlash('success', $this->translator->trans('post.created'));
-                return $this->redirectToRoute('app_blog_index');
-            }
-
-            return $this->render('blog/create.html.twig', [
-                'form' => $form->createView(),
-            ]);
-        } else {
+        if ($form->isSubmitted() && $form->isValid()) {
+            $blog->setUser($user);
+            $this->entityManager->persist($blog);
+            $this->entityManager->flush();
+            $this->addFlash('success', $this->translator->trans('post.created'));
             return $this->redirectToRoute('app_blog_index');
         }
+
+        return $this->render('blog/create.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 
     /**
@@ -124,11 +116,10 @@ class BlogController extends AbstractController
      */
     public function deleteBlog(Blog $blog): RedirectResponse
     {
-        if (!$this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY')) {
-            $this->entityManager->remove($blog);
-            $this->entityManager->flush();
-            $this->addFlash('success', $this->translator->trans('post.deleted'));
-        }
+        $this->entityManager->remove($blog);
+        $this->entityManager->flush();
+        $this->addFlash('success', $this->translator->trans('post.deleted'));
+
         return $this->redirectToRoute('app_blog_index');
     }
 

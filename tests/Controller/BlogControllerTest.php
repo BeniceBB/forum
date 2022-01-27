@@ -5,6 +5,7 @@ namespace App\Tests\Controller;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class BlogControllerTest extends WebTestCase
 {
@@ -104,7 +105,6 @@ class BlogControllerTest extends WebTestCase
         $this->assertStringContainsString('Bericht is verwijderd', $client->getResponse()->getContent());
     }
 
-    // !! Test nog aanpassen ivm CSRF TOKen !!
     public function testSearchFromNoResults(): void
     {
         $client = static::createClient();
@@ -114,9 +114,6 @@ class BlogControllerTest extends WebTestCase
                 'postsPerPage' => 5,
             ]
         ]);
-
-
-        $this->assertStringContainsString('geen berichten', $client->getResponse()->getContent());
+        $this->assertStringContainsString('geen berichten', $client->getResponse()->getContent(), 'If this returns "error" -> disable csrf-protection in Framework.yaml');
     }
-
 }

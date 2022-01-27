@@ -33,9 +33,6 @@
                     </div>
                     <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-                    {# If you want to control the URL the user is redirected to on success
-        <input type="hidden" name="_target_path" value="/account"/> #}
-
                     <button type="submit" class="btn btn-dark">Login</button>
                     <a href="{{ path('app_register') }}" class="register-link">{% trans %}link.register_new{% endtrans %}</a><br>
                     <br> <a href="{{ path('app_blog_index') }}">{% trans %}link.back_to_overview{% endtrans %}</a>

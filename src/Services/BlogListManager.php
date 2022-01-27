@@ -63,7 +63,6 @@ class BlogListManager
                 $filteredBlogs[] = $blog;
             }
         }
-
         return $filteredBlogs;
     }
 
@@ -72,5 +71,4 @@ class BlogListManager
         $postsPerPage = $data['postsPerPage'] ?? 5;
         return array_slice($filteredBlogs, $page * $postsPerPage, $postsPerPage);
     }
-
 }
