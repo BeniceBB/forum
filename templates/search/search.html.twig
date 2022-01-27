@@ -1,3 +1,4 @@
+
 <div id="search">
     {{ form_start(searchForm, {'attr': {'id': 'searchForm'}}) }}
     <div class="form-group">
@@ -8,7 +9,7 @@
         {{ form_widget(searchForm.type) }}
     </div>
     <div class="form-group">
-        <label>{% trans %}label.amountfilter{% endtrans %}</label>
+        <label>{% trans %}label.amountFilter{% endtrans %}</label>
         {{ form_widget(searchForm.postsPerPage) }}
     </div>
 
@@ -37,6 +38,8 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
+
+
     function showButtons(condition, buttonId) {
         if (condition) {
             $(buttonId).show();

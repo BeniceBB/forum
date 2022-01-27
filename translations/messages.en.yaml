@@ -17,7 +17,7 @@ label.all: All
 label.description: Descriptions
 label.post: Post
 label.author: Authors
-label.amountfilter: Posts per page
+label.amountFilter: Posts per page
 label.search_in: Search in
 
 placeholder.search: Search

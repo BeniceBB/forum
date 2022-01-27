@@ -5,9 +5,13 @@ namespace App\Controller;
 use App\Entity\Blog;
 use App\Form\Type\BlogFormType;
 use App\Form\Type\SearchFormType;
+use App\Repository\BlogRepository;
 use App\Services\BlogContentManager;
+use App\Services\BlogListManager;
+use App\Services\SearchDatabaseManager;
 use App\Services\SearchFilterManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,7 +46,7 @@ class BlogController extends AbstractController
 
         return $this->render('blog/list.html.twig', [
             'blogs' => $filteredBlogs,
-            'post_amount' => $this->translator->trans('post.amount', ['amount' => count($filteredBlogs)]),
+            'postAmount' => $this->translator->trans('post.amount', ['amount' => count($filteredBlogs)]),
             'totalFilteredBlogs' => $totalFilteredBlogs,
             'searchForm' => $form->createView(),
             'page' => 0,
@@ -68,7 +72,7 @@ class BlogController extends AbstractController
             return $this->json([
                 'result' => $this->renderView('blog/blogtable.html.twig', [
                     'blogs' => $filteredBlogs,
-                    'post_amount' => $this->translator->trans('post.amount', ['amount' => $currentAmountBlogs]),
+                    'postAmount' => $this->translator->trans('post.amount', ['amount' => $currentAmountBlogs]),
                     'totalFilteredBlogs' => $totalFilteredBlogs,
                 ]),
                 'page' => $page,
@@ -77,6 +81,45 @@ class BlogController extends AbstractController
             ]);
         }
         return $this->json('error', 503);
+    }
+
+    /**
+     * @Route("/searchDatabase", name="blogsearchdatabase" )
+     *
+     * @return Response
+     */
+    public function searchDatabase(BlogRepository $blogRepository, Request $request, SearchDatabaseManager $searchDatabaseManager): Response
+    {
+        $wordToSearch = 'n';
+        $types = ['author'];
+        $postsPerPage = 10;
+        $user = $searchDatabaseManager->getBlogsByUser();
+//        $blog = $blogRepository->findAll();
+//        dump($blogRepository->findAllBlogsBySearchParam($wordToSearch, $types, $postsPerPage));
+//        exit;
+        $blog = $blogRepository->findAllBlogsBySearchParam($wordToSearch, $types, $postsPerPage, $user);
+        $form = $this->createForm(SearchFormType::class, $blog);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+
+
+            return $this->render('search/searchDatabase.html.twig', [
+                'blogs' => $blog,
+                'postAmount' => $this->translator->trans('post.amount', ['amount' => '0']),
+                'totalFilteredBlogs' => 0,
+                'searchForm' => $form->createView(),
+                'page' => 0,
+            ]);
+        }
+        return $this->render('search/searchDatabase.html.twig', [
+            'blogs' => $blog,
+            'postAmount' => $this->translator->trans('post.amount', ['amount' => '0']),
+            'totalFilteredBlogs' => 0,
+            'searchForm' => $form->createView(),
+            'page' => 0,
+        ]);
     }
 
     /**

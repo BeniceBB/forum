@@ -17,7 +17,7 @@ label.all: Alle
 label.description: Omschrijvingen
 label.post: Bericht
 label.author: Auteurs
-label.amountfilter: Berichten per pagina
+label.amountFilter: Berichten per pagina
 label.search_in: Zoeken in
 
 placeholder.search: Zoeken
