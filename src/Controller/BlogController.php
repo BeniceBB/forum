@@ -3,18 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Blog;
-use App\Entity\User;
 use App\Form\Type\BlogFormType;
 use App\Form\Type\SearchFormType;
 use App\Repository\BlogRepository;
-use App\Repository\UserRepository;
 use App\Services\BlogContentManager;
-use App\Services\BlogListManager;
-use App\Services\SearchDatabaseManager;
 use App\Services\SearchFilterManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -91,38 +86,24 @@ class BlogController extends AbstractController
      *
      * @return Response
      */
-    public function searchDatabase(BlogRepository $blogRepository, Request $request, PaginatorInterface $paginator): Response
+    public function searchDatabase(BlogRepository $blogRepository, Request $request): Response
     {
-        $data =['search' => '', 'type' => [], 'postsPerPage' => 5];
         $blogs = $blogRepository->findAll();
         $form = $this->createForm(SearchFormType::class);
         $form->handleRequest($request);
-        $query = $blogRepository->findAllBlogsBySearchParamQuery($data);
-        $pagination = $paginator->paginate(
-            $query,
-            $request->query->getInt('page', 1),
-            5
-        );
 
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $blogs = $this->searchFilterManager->getBlogsWithQuery($data);
-            $query = $blogRepository->findAllBlogsBySearchParamQuery($data);
 
-            $pagination = $paginator->paginate(
-                $query,
-                $request->query->getInt('page', 1),
-                5
-            );
 
             return $this->render('search/searchDatabase.html.twig', [
-                'blogs' => $blogs,
+                'blogs' => $blogs['blogs'],
                 'postAmount' => $this->translator->trans('post.amount', ['amount' => $data['postsPerPage']]),
-                'totalFilteredBlogs' => $blogs,
+                'totalFilteredBlogs' => $blogs['totalFilteredBlogs'],
                 'searchForm' => $form->createView(),
                 'page' => 0,
-                'pagination' => $pagination,
             ]);
         }
         return $this->render('search/searchDatabase.html.twig', [
@@ -131,7 +112,6 @@ class BlogController extends AbstractController
             'totalFilteredBlogs' => 0,
             'searchForm' => $form->createView(),
             'page' => 0,
-            'pagination' => $pagination,
         ]);
     }
 

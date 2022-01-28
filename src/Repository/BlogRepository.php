@@ -4,8 +4,9 @@ namespace App\Repository;
 
 use App\Entity\Blog;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
-use Knp\Component\Pager\PaginatorInterface;
+use JetBrains\PhpStorm\ArrayShape;
 use function Doctrine\ORM\QueryBuilder;
 
 /**
@@ -21,10 +22,8 @@ class BlogRepository extends ServiceEntityRepository
         parent::__construct($registry, Blog::class);
     }
 
-    /**
-     * @return Blog[]
-     */
-    public function findAllBlogsBySearchParam(array $data): array
+    #[ArrayShape(['blogs' => "mixed", 'totalFilteredBlogs' => "int", 'totalPages' => "float"])]
+    public function findAllBlogsBySearchParam(array $data, $page = 1): array
     {
         $qb = $this->createQueryBuilder('b')
             ->join('b.user', 'u');
@@ -35,20 +34,26 @@ class BlogRepository extends ServiceEntityRepository
                 $qb->orWhere('b.' . $type . ' LIKE :search');
             }
         }
-
         $qb->setParameter('search', '%' . $data['search'] . '%');
+        $qb->getQuery();
 
-        return $qb->getQuery()->execute();
+        $pageSize = 5;
+        $paginator = new paginator($qb);
+        $totalItems = count($paginator);
+        $pageCount = ceil($totalItems / $pageSize);
+
+        $paginator
+            ->getQuery()
+            ->setFirstResult($pageSize * ($page - 1)) // set the offset
+            ->setMaxResults($pageSize); // set the limit
+
+        $bloglist = $qb->getQuery()->execute();
+
+        return [
+            'blogs' => $bloglist,
+            'totalFilteredBlogs' => $totalItems,
+            'totalPages' => $pageCount,
+        ];
     }
-
-
-//    public function countBlogs(array $data)
-//    {
-//        $qb = $this->createQueryBuilder('b')
-//            ->select('count(b.id');
-//dump($qb->getQuery()->getScalarResult());
-//exit;
-//        return $qb->getQuery()->execute();
-//    }
 
 }
