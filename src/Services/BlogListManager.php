@@ -13,7 +13,6 @@ class BlogListManager
         $this->blogRepository = $blogRepository;
     }
 
-
     public function getAllBlogs(): array
     {
         return $this->blogRepository->findAll();
@@ -36,7 +35,7 @@ class BlogListManager
         $filteredTypes = [];
         $filters = $data['type'] ?? [];
         if ($data['type'] === [] || in_array('all', $filters, true)) {
-            $filteredTypes = ['title', 'description', 'post', 'author'];
+            $filteredTypes = ['title', 'short_description', 'body', 'user'];
         }
         foreach ($filters as $value) {
             $filteredTypes[] = $value;
@@ -55,11 +54,11 @@ class BlogListManager
         $filteredBlogs = [];
         foreach ($blogs as $blog) {
             $containsTitle = $this->checkPostByType('title', $filters, $wordToSearch, $blog->getTitle());
-            $containsDescription = $this->checkPostByType('description', $filters, $wordToSearch, $blog->getShortDescription());
-            $containsPost = $this->checkPostByType('post', $filters, $wordToSearch, $blog->getBody());
-            $containsAuthor = $this->checkPostByType('author', $filters, $wordToSearch, $blog->getUser()->getUsername());
+            $containsDescription = $this->checkPostByType('short_description', $filters, $wordToSearch, $blog->getShortDescription());
+            $containsPost = $this->checkPostByType('body', $filters, $wordToSearch, $blog->getBody());
+            $containsUser = $this->checkPostByType('user', $filters, $wordToSearch, $blog->getUser()->getUsername());
 
-            if ($containsTitle === true || $containsDescription === true || $containsPost === true || $containsAuthor === true) {
+            if ($containsTitle === true || $containsDescription === true || $containsPost === true || $containsUser === true) {
                 $filteredBlogs[] = $blog;
             }
         }
@@ -70,5 +69,15 @@ class BlogListManager
     {
         $postsPerPage = $data['postsPerPage'] ?? 5;
         return array_slice($filteredBlogs, $page * $postsPerPage, $postsPerPage);
+    }
+
+    public function getBlogsFromQuery(array $data): array
+    {
+        return $this->blogRepository->findAllBlogsBySearchParam($data);
+    }
+
+    public function countBlogs(array $data)
+    {
+        return $this->blogRepository->countBlogs($data);
     }
 }

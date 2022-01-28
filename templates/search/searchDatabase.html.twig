@@ -27,8 +27,14 @@
                     <button type="submit" class="btn btn-dark">{% trans %}form.search{% endtrans %}</button>
                     {{ form_end(searchForm) }}
                 </div>
+                <div class="navigation">
+                    {{ knp_pagination_render(pagination) }}
+                </div>
 
-                <div class="post_count">{{ postAmount }} {% trans %}from.amount{% endtrans %} {{ totalFilteredBlogs }}</div>
+{#                <div class="post_count">{{ postAmount }} {% trans %}from.amount{% endtrans %} {{ totalFilteredBlogs }}</div>#}
+                <div class="count">
+                    {{ pagination.getTotalItemCount }}
+                </div>
 
                 <table class="table table-striped ">
                     <thead class="thead-dark">

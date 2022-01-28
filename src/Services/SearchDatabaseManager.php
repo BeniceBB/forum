@@ -40,16 +40,4 @@ class SearchDatabaseManager
         ]);
     }
 
-    public function getBlogsByUser(string $wordToSearch, User $user): array
-    {
-        return $this->blogRepository->findBy([
-            'body' => $wordToSearch,
-        ]);
-    }
-
-//    public function getBlogsByUsername(string $wordToSearch): array
-//    {
-////        return $this->blogRepository->createQueryBuilder();
-//    }
-
 }

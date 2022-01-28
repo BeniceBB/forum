@@ -47,4 +47,11 @@ class SearchFilterManager
         return $currentAmountBlogs;
     }
 
+    public function getBlogsWithQuery(array $data): array
+    {
+        $data['type'] = $this->blogListManager->getFilters($data);
+        return $this->blogListManager->getBlogsFromQuery($data);
+
+    }
+
 }

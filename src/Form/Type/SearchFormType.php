@@ -16,9 +16,9 @@ class SearchFormType extends AbstractType
             'choices' => [
                 'label.all' => 'all',
                 'label.title' => 'title',
-                'label.description' => 'description',
-                'label.post' => 'post',
-                'label.author' => 'author',
+                'label.description' => 'short_description',
+                'label.post' => 'body',
+                'label.author' => 'user',
                 ],
             'expanded' => true,
             'multiple' => true,

@@ -3,9 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Blog;
-use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\PaginatorInterface;
 use function Doctrine\ORM\QueryBuilder;
 
 /**
@@ -21,65 +21,34 @@ class BlogRepository extends ServiceEntityRepository
         parent::__construct($registry, Blog::class);
     }
 
-
     /**
      * @return Blog[]
      */
-    public function findAllBlogsBySearchParam(string $wordToSearch, array $types, int $postsPerPage, User $user)
+    public function findAllBlogsBySearchParam(array $data): array
     {
-        $qb = $this->createQueryBuilder('b');
-        foreach ($types as $type) {
-            if ($type === 'author') {
-                $qb->orWhere('b.user LIKE '. $user->getUsername());
-                $qb->setParameter('user', '%' . $wordToSearch . '%');
-            }
-            else {
-                $qb->orWhere('b.' . $type . ' LIKE :' . $type);
-                $qb->setParameter($type, '%' . $wordToSearch . '%');
+        $qb = $this->createQueryBuilder('b')
+            ->join('b.user', 'u');
+        foreach ($data['type'] as $type) {
+            if ($type === 'user') {
+                $qb->orWhere('u.username LIKE :search');
+            } else if ($type !== 'all') {
+                $qb->orWhere('b.' . $type . ' LIKE :search');
             }
         }
 
-        $qb->setMaxResults($postsPerPage);
+        $qb->setParameter('search', '%' . $data['search'] . '%');
 
         return $qb->getQuery()->execute();
     }
 
 
-
-//    /**
-//     * @return Blog[]
-//     */
-//    public function findAllBlogsBySearchParam(string $wordToSearch, array $types, int $postsPerPage)
+//    public function countBlogs(array $data)
 //    {
-//
-//        $expr = $this->_em->getExpressionBuilder();
-//        // SELECT * FROM `blog` WHERE `blog`.`user_id` IN (SELECT `user`.`id` FROM `user` WHERE `user`.`id` = `blog`.`user_id` AND `user`.`username` LIKE '%n%');
-//        $qb = $this->createQueryBuilder('b');
-//
-//        foreach ($types as $type) {
-//            if($type === 'author')
-//            {
-//                $sub = $this->_em->createQueryBuilder()
-//                    ->select('u.id')
-//                    ->from(User::class, 'u')
-//                    ->where('u.username LIKE :username')
-//                    ->setParameter('username', '%' . $wordToSearch . '%');
-////                dump($sub->getQuery()->execute());exit;
-//                $qb->orWhere($qb->expr()->in('b.user', $sub->getDQL()));//                $qb->from(User::class, 'u');
-////                $qb->orWhere('u.id LIKE :user_id');
-////                $qb->setParameter(':username', $user->getUsername());
-//            }
-//            else {
-//                $qb->orWhere('b.' . $type . ' LIKE :' . $type);
-//                $qb->setParameter($type, '%' . $wordToSearch . '%');
-//            }
-//
-//        }
-//
-//        $qb->setMaxResults($postsPerPage);
-////        dump($qb->getQuery());
-////        exit;
-////        return $qb->getQuery();
+//        $qb = $this->createQueryBuilder('b')
+//            ->select('count(b.id');
+//dump($qb->getQuery()->getScalarResult());
+//exit;
 //        return $qb->getQuery()->execute();
 //    }
+
 }
