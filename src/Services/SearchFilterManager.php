@@ -2,6 +2,9 @@
 
 namespace App\Services;
 
+use JetBrains\PhpStorm\ArrayShape;
+use Doctrine\ORM\Tools\Pagination\Paginator;
+
 class SearchFilterManager
 {
     private BlogListManager $blogListManager;
@@ -39,18 +42,18 @@ class SearchFilterManager
     {
         $currentAmountBlogs = ($page + 1) * count($filteredBlogs);
         $numberOfBlogsPerPage = $data['postsPerPage'] ?? 5;
-        if(count($filteredBlogs) < $numberOfBlogsPerPage)
-        {
+        if (count($filteredBlogs) < $numberOfBlogsPerPage) {
             $currentAmountBlogs = $this->totalFilteredBlogs($data);
         }
-
         return $currentAmountBlogs;
     }
 
-    public function getBlogsWithQuery(array $data): array
+    public function getBlogsWithQuery(array $data, int $page = 0): array
     {
         $data['type'] = $this->blogListManager->getFilters($data);
-        return $this->blogListManager->getBlogsFromQuery($data);
+        $filteredBlogs = $this->blogListManager->getBlogsFromQuery($data);
+
+        return $this->blogListManager->limitBlogs($data, $filteredBlogs, $page);
 
     }
 

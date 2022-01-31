@@ -75,9 +75,4 @@ class BlogListManager
     {
         return $this->blogRepository->findAllBlogsBySearchParam($data);
     }
-
-    public function countBlogs(array $data)
-    {
-        return $this->blogRepository->countBlogs($data);
-    }
 }

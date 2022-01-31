@@ -82,36 +82,42 @@ class BlogController extends AbstractController
     }
 
     /**
-     * @Route("/searchDatabase", name="blogsearchdatabase" )
+     * @Route("/searchDatabase/{page}", name="blogSearchDatabase" )
      *
      * @return Response
      */
-    public function searchDatabase(BlogRepository $blogRepository, Request $request): Response
+    public function searchDatabase(Request $request, ?int $page = 0): Response
     {
-        $blogs = $blogRepository->findAll();
+//        $data = ['search' => '', 'type' => ['all'], 'postsPerPage' => 5];
+//        $blogs = $this->searchFilterManager->getBlogsWithQuery($data);
+
         $form = $this->createForm(SearchFormType::class);
         $form->handleRequest($request);
 
-
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $blogs = $this->searchFilterManager->getBlogsWithQuery($data);
 
+            $filteredBlogs = $this->searchFilterManager->getBlogsWithQuery($data);
+            $totalFilteredBlogs = $this->searchFilterManager->totalFilteredBlogs($data);
+            $currentAmountBlogs = $this->searchFilterManager->currentBlogCount($page, $filteredBlogs, $data);
 
-            return $this->render('search/searchDatabase.html.twig', [
-                'blogs' => $blogs['blogs'],
-                'postAmount' => $this->translator->trans('post.amount', ['amount' => $data['postsPerPage']]),
-                'totalFilteredBlogs' => $blogs['totalFilteredBlogs'],
-                'searchForm' => $form->createView(),
-                'page' => 0,
+            return $this->json([
+                'result' => $this->renderView('blog/blogtable.html.twig', [
+                    'blogs' => $filteredBlogs,
+                    'postAmount' => $this->translator->trans('post.amount', ['amount' => $currentAmountBlogs]),
+                    'totalFilteredBlogs' => $totalFilteredBlogs,
+                ]),
+                'page' => $page,
+                'numberOfBlogs' => count($filteredBlogs),
+                'numberOfBlogsPerPage' => $data['postsPerPage'] ?? 5,
             ]);
         }
         return $this->render('search/searchDatabase.html.twig', [
             'blogs' => $blogs,
-            'postAmount' => $this->translator->trans('post.amount', ['amount' => '0']),
-            'totalFilteredBlogs' => 0,
+            'postAmount' => $this->translator->trans('post.amount', ['amount' => 0]),
+            'totalFilteredBlogs' => count($blogs),
             'searchForm' => $form->createView(),
-            'page' => 0,
+            'page' => $page,
         ]);
     }
 
