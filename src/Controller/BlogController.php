@@ -5,11 +5,9 @@ namespace App\Controller;
 use App\Entity\Blog;
 use App\Form\Type\BlogFormType;
 use App\Form\Type\SearchFormType;
-use App\Repository\BlogRepository;
 use App\Services\BlogContentManager;
 use App\Services\SearchFilterManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -64,18 +62,13 @@ class BlogController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $filteredBlogs = $this->searchFilterManager->getBlogs($data, $page);
-            $totalFilteredBlogs = $this->searchFilterManager->totalFilteredBlogs($data);
-            $currentAmountBlogs = $this->searchFilterManager->currentBlogCount($page, $filteredBlogs, $data);
+            $returnedData = $this->searchFilterManager->getAllDataFilteredBlogs($data, $filteredBlogs, $page);
 
             return $this->json([
-                'result' => $this->renderView('blog/blogtable.html.twig', [
-                    'blogs' => $filteredBlogs,
-                    'postAmount' => $this->translator->trans('post.amount', ['amount' => $currentAmountBlogs]),
-                    'totalFilteredBlogs' => $totalFilteredBlogs,
-                ]),
-                'page' => $page,
-                'numberOfBlogs' => count($filteredBlogs),
-                'numberOfBlogsPerPage' => $data['postsPerPage'] ?? 5,
+                'result' => $this->renderView('blog/blogtable.html.twig', $returnedData['templateResult']),
+                'page' => $returnedData['page'],
+                'numberOfBlogs' => $returnedData['numberOfBlogs'],
+                'numberOfBlogsPerPage' => $returnedData['numberOfBlogsPerPage'],
             ]);
         }
         return $this->json('error', 503);
@@ -88,28 +81,19 @@ class BlogController extends AbstractController
      */
     public function searchDatabase(Request $request, ?int $page = 0): Response
     {
-//        $data = ['search' => '', 'type' => ['all'], 'postsPerPage' => 5];
-//        $blogs = $this->searchFilterManager->getBlogsWithQuery($data);
-
         $form = $this->createForm(SearchFormType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-
             $filteredBlogs = $this->searchFilterManager->getBlogsFromQueryTypeFilter($data, $page);
-            $totalFilteredBlogs = $this->searchFilterManager->totalFilteredBlogs($data);
-            $currentAmountBlogs = $this->searchFilterManager->currentBlogCount($page, $filteredBlogs, $data);
+            $returnedData = $this->searchFilterManager->getAllDataFilteredBlogs($data, $filteredBlogs, $page);
 
             return $this->json([
-                'result' => $this->renderView('blog/blogtable.html.twig', [
-                    'blogs' => $filteredBlogs,
-                    'postAmount' => $this->translator->trans('post.amount', ['amount' => $currentAmountBlogs]),
-                    'totalFilteredBlogs' => $totalFilteredBlogs,
-                ]),
-                'page' => $page,
-                'numberOfBlogs' => count($filteredBlogs),
-                'numberOfBlogsPerPage' => $data['postsPerPage'] ?? 5,
+                'result' => $this->renderView('blog/blogtable.html.twig', $returnedData['templateResult']),
+                'page' => $returnedData['page'],
+                'numberOfBlogs' => $returnedData['numberOfBlogs'],
+                'numberOfBlogsPerPage' => $returnedData['numberOfBlogsPerPage'],
             ]);
         }
         return $this->json('error', 503);
