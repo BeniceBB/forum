@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use JetBrains\PhpStorm\ArrayShape;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SearchFilterManager
@@ -57,16 +58,18 @@ class SearchFilterManager
         return $this->blogListManager->limitBlogs($data, $filteredBlogs, $page);
     }
 
-    public function getAllDataFilteredBlogs(array $data, array $filteredBlogs, int $page = 0): array
+    #[ArrayShape(['templateResult' => "array", 'page' => "int|null", 'numberOfBlogs' => "int", 'numberOfBlogsPerPage' => "int|mixed"])]
+    public function getAllDataFilteredBlogs(array $data, array $filteredBlogs, ?int $page = 0): array
     {
         $totalFilteredBlogs = $this->totalFilteredBlogs($data);
         $currentAmountBlogs = $this->currentBlogCount($page, $filteredBlogs, $data);
 
-        return ['templateResult' => [
-            'blogs' => $filteredBlogs,
-            'postAmount' => $this->translator->trans('post.amount', ['amount' => $currentAmountBlogs]),
-            'totalFilteredBlogs' => $totalFilteredBlogs,
-        ],
+        return ['templateResult' =>
+            [
+                'blogs' => $filteredBlogs,
+                'postAmount' => $this->translator->trans('post.amount', ['amount' => $currentAmountBlogs]),
+                'totalFilteredBlogs' => $totalFilteredBlogs,
+            ],
             'page' => $page,
             'numberOfBlogs' => count($filteredBlogs),
             'numberOfBlogsPerPage' => $data['postsPerPage'] ?? 5,

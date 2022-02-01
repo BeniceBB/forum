@@ -6,6 +6,7 @@ use App\Entity\Blog;
 use App\Services\BlogListManager;
 use App\Services\SearchFilterManager;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SearchFilterTest extends KernelTestCase
 {
@@ -16,8 +17,9 @@ class SearchFilterTest extends KernelTestCase
     public function testFilterBlogsWithoutData(): void
     {
         $blogListManager = $this->createMock(BlogListManager::class);
+        $translator = $this->createMock(TranslatorInterface::class);
 
-        $searchFilterManager = new SearchFilterManager($blogListManager);
+        $searchFilterManager = new SearchFilterManager($blogListManager, $translator);
 
         $data = [];
 
@@ -33,8 +35,9 @@ class SearchFilterTest extends KernelTestCase
     public function testFilterBlogs(): void
     {
         $blogListManager = $this->createMock(BlogListManager::class);
+        $translator = $this->createMock(TranslatorInterface::class);
 
-        $searchFilterManager = new SearchFilterManager($blogListManager);
+        $searchFilterManager = new SearchFilterManager($blogListManager, $translator);
 
         $data = ['search' => 'test', 'type' => ['all'], 'postsPerPage' => 5];
 
@@ -49,8 +52,9 @@ class SearchFilterTest extends KernelTestCase
     public function testGetBlogs(): void
     {
         $blogListManager = $this->createMock(BlogListManager::class);
+        $translator = $this->createMock(TranslatorInterface::class);
 
-        $searchFilterManager = new SearchFilterManager($blogListManager);
+        $searchFilterManager = new SearchFilterManager($blogListManager, $translator);
 
         $data = ['search' => 'test', 'type' => ['all'], 'postsPerPage' => 5];
         $page = 0;
@@ -66,8 +70,9 @@ class SearchFilterTest extends KernelTestCase
     public function testTotalFilteredBlogs(): void
     {
         $blogListManager = $this->createMock(BlogListManager::class);
+        $translator = $this->createMock(TranslatorInterface::class);
 
-        $searchFilterManager = new SearchFilterManager($blogListManager);
+        $searchFilterManager = new SearchFilterManager($blogListManager, $translator);
 
         $data = ['search' => 'test', 'type' => ['all'], 'postsPerPage' => 5];
         $result = $searchFilterManager->totalFilteredBlogs($data);
@@ -82,8 +87,9 @@ class SearchFilterTest extends KernelTestCase
     public function testCurrentBlogCount(): void
     {
         $blogListManager = $this->createMock(BlogListManager::class);
+        $translator = $this->createMock(TranslatorInterface::class);
 
-        $searchFilterManager = new SearchFilterManager($blogListManager);
+        $searchFilterManager = new SearchFilterManager($blogListManager, $translator);
 
         $page = 0;
         $filteredBlogs = [new Blog(), new Blog(), new Blog(), new Blog(), new Blog(), new Blog(), new Blog()];
@@ -101,14 +107,35 @@ class SearchFilterTest extends KernelTestCase
     public function testGetBlogsFromQueryTypeFilter(): void
     {
         $blogListManager = $this->createMock(BlogListManager::class);
+        $translator = $this->createMock(TranslatorInterface::class);
 
-        $searchFilterManager = new SearchFilterManager($blogListManager);
+        $searchFilterManager = new SearchFilterManager($blogListManager, $translator);
 
         $data = ['search' => 'test', 'type' => ['all'], 'postsPerPage' => 5];
         $page = 0;
 
         $result = $searchFilterManager->getBlogsFromQueryTypeFilter($data, $page);
         static::assertIsArray($result);
+    }
+
+    /**
+     * @group Unit
+     */
+
+    public function testGetAllDataFilteredBlogs(): void
+    {
+        $blogListManager = $this->createMock(BlogListManager::class);
+        $translator = $this->createMock(TranslatorInterface::class);
+
+        $searchFilterManager = new SearchFilterManager($blogListManager, $translator);
+
+        $data = ['search' => 'test', 'type' => ['all'], 'postsPerPage' => 5];
+        $filteredBlogs = [new Blog(), new Blog()];
+        $page = 0;
+
+        $result = $searchFilterManager->getAllDataFilteredBlogs($data, $filteredBlogs, $page);
+        static::assertIsArray($result);
+
     }
 
     /**
@@ -331,6 +358,8 @@ class SearchFilterTest extends KernelTestCase
         $this->assertIsArray($result);
         $this->assertCount(5, $result);
     }
+
+
 
 
 

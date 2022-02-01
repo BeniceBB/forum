@@ -38,5 +38,4 @@ class BlogRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->execute();
     }
-
 }
