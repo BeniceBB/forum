@@ -97,7 +97,7 @@ class BlogController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
-            $filteredBlogs = $this->searchFilterManager->getBlogsWithQuery($data);
+            $filteredBlogs = $this->searchFilterManager->getBlogsFromQueryTypeFilter($data, $page);
             $totalFilteredBlogs = $this->searchFilterManager->totalFilteredBlogs($data);
             $currentAmountBlogs = $this->searchFilterManager->currentBlogCount($page, $filteredBlogs, $data);
 
@@ -112,13 +112,7 @@ class BlogController extends AbstractController
                 'numberOfBlogsPerPage' => $data['postsPerPage'] ?? 5,
             ]);
         }
-        return $this->render('search/searchDatabase.html.twig', [
-            'blogs' => $blogs,
-            'postAmount' => $this->translator->trans('post.amount', ['amount' => 0]),
-            'totalFilteredBlogs' => count($blogs),
-            'searchForm' => $form->createView(),
-            'page' => $page,
-        ]);
+        return $this->json('error', 503);
     }
 
     /**
