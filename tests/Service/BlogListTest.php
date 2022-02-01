@@ -121,7 +121,7 @@ class BlogListTest extends KernelTestCase
         $data = ['type' => ['all']];
 
         $result = $blogListManager->getFilters($data);
-        static::assertSame(['title', 'description', 'post', 'author', 'all'], $result);
+        static::assertSame(['title', 'short_description', 'body', 'user', 'all'], $result);
     }
 
     public function testGetWordToSearch(): void
@@ -196,6 +196,17 @@ class BlogListTest extends KernelTestCase
 
         $result = $blogListManager->limitBlogs($data, $filteredBlogs, $page);
         static::assertCount(1, $result);
+    }
+
+    public function testGetBlogsFromQuery(): void
+    {
+        $blogRepository = $this->createMock(BlogRepository::class);
+        $blogRepository->expects(static::once())->method('findAll')->willReturn([new Blog()]);
+
+        $blogListManager = new BlogListManager($blogRepository);
+        $result = $blogListManager->getAllBlogs();
+        static::assertCount(1, $result);
+        static::assertInstanceOf(Blog::class, $result[0]);
     }
 
 }

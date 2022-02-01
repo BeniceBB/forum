@@ -95,6 +95,23 @@ class SearchFilterTest extends KernelTestCase
     }
 
     /**
+     * @group Unit
+     */
+
+    public function testGetBlogsFromQueryTypeFilter(): void
+    {
+        $blogListManager = $this->createMock(BlogListManager::class);
+
+        $searchFilterManager = new SearchFilterManager($blogListManager);
+
+        $data = ['search' => 'test', 'type' => ['all'], 'postsPerPage' => 5];
+        $page = 0;
+
+        $result = $searchFilterManager->getBlogsFromQueryTypeFilter($data, $page);
+        static::assertIsArray($result);
+    }
+
+    /**
      * @group Integration
      */
 
@@ -277,6 +294,42 @@ class SearchFilterTest extends KernelTestCase
         $result = $searchFilterManager->currentBlogCount($page, $filteredBlogs, $data);
         $this->assertIsInt($result);
         $this->assertEquals(6, $result);
+    }
+
+    /**
+     * @group Integration
+     */
+
+    public function testGetBlogsQueryPerPageLimitSet(): void
+    {
+        self::bootKernel();
+
+        $container = static::getContainer();
+        $searchFilterManager = $container->get(SearchFilterManager::class);
+
+        $data = ['search' => '', 'type' => ['all'], 'postsPerPage' => 3];
+
+        $result = $searchFilterManager->getBlogsFromQueryTypeFilter($data);
+        $this->assertIsArray($result);
+        $this->assertCount(3, $result, 'Did not count 3');
+    }
+
+    /**
+     * @group Integration
+     */
+
+    public function testGetBlogsQueryPerPageNoLimitSet(): void
+    {
+        self::bootKernel();
+
+        $container = static::getContainer();
+        $searchFilterManager = $container->get(SearchFilterManager::class);
+
+        $data = ['search' => '', 'type' => ['all']];
+
+        $result = $searchFilterManager->getBlogsFromQueryTypeFilter($data);
+        $this->assertIsArray($result);
+        $this->assertCount(5, $result);
     }
 
 
