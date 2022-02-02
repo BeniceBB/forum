@@ -18,6 +18,27 @@ class BlogListManager
         return $this->blogRepository->findAll();
     }
 
+    public function getAllTitles(array $blogs): array
+    {
+        $blogTitles = [];
+        foreach ($blogs as $blog)
+        {
+            $blogTitles[] = $blog->getTitle();
+        }
+        return $blogTitles;
+    }
+
+    public function getAllUsernames(array $blogs): array
+    {
+        $blogAuthors = [];
+        foreach ($blogs as $blog)
+        {
+            $blogAuthors[] = $blog->getUser()->getUsername();
+        }
+        return $blogAuthors;
+    }
+
+
     public function checkPostByType(string $type, array $filteredTypes, string $wordToSearch, ?string $value = ''): bool
     {
         $contains = false;
@@ -64,6 +85,23 @@ class BlogListManager
         }
         return $filteredBlogs;
     }
+
+    public function currentBlogCount(int $page, array $filteredBlogs, array $data, int $totalFilteredBlogs): int
+    {
+        $currentAmountBlogs = ($page + 1) * count($filteredBlogs);
+        $numberOfBlogsPerPage = $data['postsPerPage'] ?? 5;
+        if (count($filteredBlogs) < $numberOfBlogsPerPage) {
+            $currentAmountBlogs = $totalFilteredBlogs;
+        }
+        return $currentAmountBlogs;
+    }
+
+//    public function sortFilteredBlogs(array $filteredBlogs, array $filters, string $wordToSearch): array
+//    {
+//        $filteredBlogs = $this->getFilteredBlogs($filteredBlogs, $filters, $wordToSearch);
+//       dump($filteredBlogs);
+//       exit;
+//    }
 
     public function limitBlogs(array $data, array $filteredBlogs, int $page): array
     {

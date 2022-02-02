@@ -63,6 +63,8 @@ class BlogController extends AbstractController
             $data = $form->getData();
             $filteredBlogs = $this->searchFilterManager->getBlogs($data, $page);
             $returnedData = $this->searchFilterManager->getAllDataFilteredBlogs($data, $filteredBlogs, $page);
+            $sortBlogs = $this->searchFilterManager->sortFilteredBlogs($data);
+
 
             return $this->json([
                 'result' => $this->renderView('blog/blogtable.html.twig', $returnedData['templateResult']),

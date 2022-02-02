@@ -45,7 +45,6 @@ class SearchFormType extends AbstractType
                     'label.A-Z' => 'user ASC',
                     'label.Z-A' => 'user DESC',
                 ],
-
             ],
         ]);
     }

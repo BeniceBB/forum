@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Entity\Blog;
 use JetBrains\PhpStorm\ArrayShape;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -29,29 +30,84 @@ class SearchFilterManager
         return $result;
     }
 
-    public function getBlogs(array $data, int $page = 0): array
+
+    public function sortFilteredBlogs(array $data): array
+    {
+        // 'school-data' array
+        $filteredBlogs = $this->filterBlogs($data);
+        $blogTitles = $this->blogListManager->getAllTitles($filteredBlogs);
+
+        // titels gesorteerd (A-Z):
+        asort($blogTitles);
+
+        uasort($blogTitles, [$filteredBlogs[0], 'getTitle']);
+        dump($blogTitles);
+        exit;
+
+        array_multisort($filteredBlogs, SORT_ASC, $blogTitles);
+        dump($filteredBlogs);
+        exit;
+
+        return $blogTitles;
+    }
+
+
+
+
+
+
+//
+//        usort($filteredBlogs, static function ($blogTitles, $filteredBlogs) {
+//            foreach ($filteredBlogs as $key => $blogObject) {
+//                if ($blogTitles === $blogObject->getTitle()) {
+//                    return 0;
+//                }
+//                return $blogTitles < $filteredBlogs ? -1 : 1;
+//            }
+//            });
+//            dump($filteredBlogs);
+//            exit;
+//
+//            dump($blogObject->getTitle());
+//            exit;
+//        }
+//        dump($filteredBlogs);
+//        exit;
+
+// Titles A to Z
+//        asort($blogTitles);
+//        // foreach title return object with same title
+//
+//        // Title Z to A
+//        asort($blogTitles);
+//
+//
+//        // if 'date asc:
+//        asort($filteredBlogs);
+//        // if 'date desc:
+//        arsort($filteredBlogs);
+//
+//        dump($filteredBlogs);
+//        exit;
+//        return $filteredBlogs;
+
+
+    public
+    function getBlogs(array $data, int $page = 0): array
     {
         $filteredBlogs = $this->filterBlogs($data);
         return $this->blogListManager->limitBlogs($data, $filteredBlogs, $page);
     }
 
-    public function totalFilteredBlogs(array $data): int
+    public
+    function totalFilteredBlogs(array $data): int
     {
         $filteredBlogs = $this->filterBlogs($data);
         return count($filteredBlogs);
     }
 
-    public function currentBlogCount(int $page, array $filteredBlogs, array $data): int
-    {
-        $currentAmountBlogs = ($page + 1) * count($filteredBlogs);
-        $numberOfBlogsPerPage = $data['postsPerPage'] ?? 5;
-        if (count($filteredBlogs) < $numberOfBlogsPerPage) {
-            $currentAmountBlogs = $this->totalFilteredBlogs($data);
-        }
-        return $currentAmountBlogs;
-    }
-
-    public function getBlogsFromQueryTypeFilter(array $data, int $page = 0): array
+    public
+    function getBlogsFromQueryTypeFilter(array $data, int $page = 0): array
     {
         $data['orderBy'] = explode(' ', $data['orderBy']);
         $data['type'] = $this->blogListManager->getFilters($data);
@@ -59,11 +115,12 @@ class SearchFilterManager
         return $this->blogListManager->limitBlogs($data, $filteredBlogs, $page);
     }
 
-    #[ArrayShape(['templateResult' => "array", 'page' => "int|null", 'numberOfBlogs' => "int", 'numberOfBlogsPerPage' => "int|mixed"])]
+    #[
+        ArrayShape(['templateResult' => "array", 'page' => "int|null", 'numberOfBlogs' => "int", 'numberOfBlogsPerPage' => "int|mixed"])]
     public function getAllDataFilteredBlogs(array $data, array $filteredBlogs, ?int $page = 0): array
     {
         $totalFilteredBlogs = $this->totalFilteredBlogs($data);
-        $currentAmountBlogs = $this->currentBlogCount($page, $filteredBlogs, $data);
+        $currentAmountBlogs = $this->blogListManager->currentBlogCount($page, $filteredBlogs, $data, $totalFilteredBlogs);
 
         return ['templateResult' =>
             [
