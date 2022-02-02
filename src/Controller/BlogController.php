@@ -86,7 +86,6 @@ class BlogController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $orderBy = $data['orderBy'];
             $filteredBlogs = $this->searchFilterManager->getBlogsFromQueryTypeFilter($data, $page);
             $returnedData = $this->searchFilterManager->getAllDataFilteredBlogs($data, $filteredBlogs, $page);
 
