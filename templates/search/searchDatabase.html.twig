@@ -11,6 +11,10 @@
         <label>{% trans %}label.amountFilter{% endtrans %}</label>
         {{ form_widget(searchForm.postsPerPage) }}
     </div>
+    <div class="form-group">
+        <label>{% trans %}label.orderBy{% endtrans %}</label>
+        {{ form_widget(searchForm.orderBy) }}
+    </div>
 
     <button type="submit" class="btn btn-dark">{% trans %}form.search{% endtrans %}</button>
     {{ form_end(searchForm) }}

@@ -15,11 +15,11 @@ class SearchFormType extends AbstractType
         $builder->add('type', ChoiceType::class, [
             'choices' => [
                 'label.all' => 'all',
-                'label.title' => 'title',
-                'label.description' => 'short_description',
+                'label.titles' => 'title',
+                'label.descriptions' => 'short_description',
                 'label.post' => 'body',
-                'label.author' => 'user',
-                ],
+                'label.authors' => 'user',
+            ],
             'expanded' => true,
             'multiple' => true,
         ]);
@@ -29,6 +29,23 @@ class SearchFormType extends AbstractType
                 10 => 10,
                 25 => 25,
                 50 => 50
+            ],
+        ]);
+        $builder->add('orderBy', ChoiceType::class, [
+            'choices' => [
+                'label.date' => [
+                    'label.asc' => 'id ASC',
+                    'label.desc' => 'id DESC',
+                ],
+                'label.title' => [
+                    'label.A-Z' => 'title ASC',
+                    'label.Z-A' => 'title DESC',
+                ],
+                'label.author' => [
+                    'label.A-Z' => 'user ASC',
+                    'label.Z-A' => 'user DESC',
+                ],
+
             ],
         ]);
     }

@@ -12,13 +12,21 @@ label.name: Naam
 label.username: Gebruikersnaam
 label.password: Wachtwoord
 label.new_password: Kies een wachtwoord
-label.title: Titels
+label.titles: Titels
+label.title: Titel
 label.all: Alle
-label.description: Omschrijvingen
+label.descriptions: Omschrijvingen
 label.post: Bericht
-label.author: Auteurs
+label.authors: Auteurs
+label.author: Auteur
 label.amountFilter: Berichten per pagina
 label.search_in: Zoeken in
+label.orderBy: Sorteer
+label.date: Datum
+label.A-Z: A tot Z
+label.Z-A: Z tot A
+label.asc: Oudste eerst
+label.desc: Nieuwse eerst
 
 placeholder.search: Zoeken
 

@@ -12,13 +12,22 @@ label.name: Name
 label.username: Username
 label.password: Password
 label.new_password: Choose a password
-label.title: Titles
+label.titles: Titles
+label.title: Title
 label.all: All
-label.description: Descriptions
+label.descriptions: Descriptions
+label.description: Description
 label.post: Post
-label.author: Authors
+label.authors: Authors
+label.author: Author
 label.amountFilter: Posts per page
 label.search_in: Search in
+label.orderBy: Sort
+label.date: Date
+label.A-Z: A to Z
+label.Z-A: Z to A
+label.asc: Oldest first
+label.desc: Newest first
 
 placeholder.search: Search
 

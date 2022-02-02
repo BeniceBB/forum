@@ -4,9 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Blog;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
-use JetBrains\PhpStorm\ArrayShape;
 
 /**
  * @method Blog|null find($id, $lockMode = null, $lockVersion = null)
@@ -34,8 +32,8 @@ class BlogRepository extends ServiceEntityRepository
             }
         }
         $qb->setParameter('search', '%' . $data['search'] . '%');
+        $qb->orderBy('b.'.$data['orderBy'][0], $data['orderBy'][1]);
         $qb->getQuery();
-
         return $qb->getQuery()->execute();
     }
 }

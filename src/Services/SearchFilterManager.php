@@ -53,6 +53,7 @@ class SearchFilterManager
 
     public function getBlogsFromQueryTypeFilter(array $data, int $page = 0): array
     {
+        $data['orderBy'] = explode(' ', $data['orderBy']);
         $data['type'] = $this->blogListManager->getFilters($data);
         $filteredBlogs = $this->blogListManager->getBlogsFromQuery($data);
         return $this->blogListManager->limitBlogs($data, $filteredBlogs, $page);
