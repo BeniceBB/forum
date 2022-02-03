@@ -21,8 +21,7 @@ class BlogListManager
     public function getAllTitles(array $blogs): array
     {
         $blogTitles = [];
-        foreach ($blogs as $blog)
-        {
+        foreach ($blogs as $blog) {
             $blogTitles[] = $blog->getTitle();
         }
         return $blogTitles;
@@ -31,8 +30,7 @@ class BlogListManager
     public function getAllUsernames(array $blogs): array
     {
         $blogAuthors = [];
-        foreach ($blogs as $blog)
-        {
+        foreach ($blogs as $blog) {
             $blogAuthors[] = $blog->getUser()->getUsername();
         }
         return $blogAuthors;
@@ -96,20 +94,53 @@ class BlogListManager
         return $currentAmountBlogs;
     }
 
-//    public function sortFilteredBlogs(array $filteredBlogs, array $filters, string $wordToSearch): array
-//    {
-//        $filteredBlogs = $this->getFilteredBlogs($filteredBlogs, $filters, $wordToSearch);
-//       dump($filteredBlogs);
-//       exit;
-//    }
 
-    public function limitBlogs(array $data, array $filteredBlogs, int $page): array
+    public function sortFilteredBlogs(array $blogs, array $filters, string $wordToSearch, array $data): array
+    {
+        $filteredBlogs = $this->getFilteredBlogs($blogs, $filters, $wordToSearch);
+
+//        $data['orderBy'] = 'id ASC';
+
+        switch ($data['orderBy']) {
+            case 'id ASC':
+                asort($filteredBlogs);
+                break;
+            case 'id DESC':
+                arsort($filteredBlogs);
+                break;
+            case 'title ASC':
+                uasort($filteredBlogs, static function ($a, $b) {
+                    return strcmp(strtolower($a->getTitle()), strtolower($b->getTitle()));
+                });
+                break;
+            case 'title DESC':
+                uasort($filteredBlogs, static function ($a, $b) {
+                    return -1 * strcmp(strtolower($a->getTitle()), strtolower($b->getTitle()));
+                });
+                break;
+            case 'user ASC':
+                uasort($filteredBlogs, static function ($a, $b) {
+                    return strcmp(strtolower($a->getUser()->getUsername()), strtolower($b->getUser()->getUsername()));
+                });
+                break;
+            case 'user DESC':
+                uasort($filteredBlogs, static function ($a, $b) {
+                    return -1 * strcmp(strtolower($a->getUser()->getUsername()), strtolower($b->getUser()->getUsername()));
+                });
+                break;
+        }
+        return $filteredBlogs;
+    }
+
+    public
+    function limitBlogs(array $data, array $filteredBlogs, int $page): array
     {
         $postsPerPage = $data['postsPerPage'] ?? 5;
         return array_slice($filteredBlogs, $page * $postsPerPage, $postsPerPage);
     }
 
-    public function getBlogsFromQuery(array $data): array
+    public
+    function getBlogsFromQuery(array $data): array
     {
         return $this->blogRepository->findAllBlogsBySearchParam($data);
     }

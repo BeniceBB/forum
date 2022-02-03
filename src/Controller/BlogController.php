@@ -37,7 +37,7 @@ class BlogController extends AbstractController
     public function index(): Response
     {
         $form = $this->createForm(SearchFormType::class);
-        $filteredBlogs = $this->searchFilterManager->getBlogs(['type' => ['all']]);
+        $filteredBlogs = $this->searchFilterManager->getBlogs(['type' => ['all'], 'orderBy' => 'id ASC']);
         $totalFilteredBlogs = $this->searchFilterManager->totalFilteredBlogs(['type' => ['all']]);
 
         return $this->render('blog/list.html.twig', [
@@ -52,6 +52,8 @@ class BlogController extends AbstractController
     /**
      * @Route("/search/{page}", name="blogsearch" )
      *
+     * @param Request $request
+     * @param int|null $page
      * @return Response
      */
     public function search(Request $request, ?int $page = 0): Response
@@ -63,8 +65,6 @@ class BlogController extends AbstractController
             $data = $form->getData();
             $filteredBlogs = $this->searchFilterManager->getBlogs($data, $page);
             $returnedData = $this->searchFilterManager->getAllDataFilteredBlogs($data, $filteredBlogs, $page);
-            $sortBlogs = $this->searchFilterManager->sortFilteredBlogs($data);
-
 
             return $this->json([
                 'result' => $this->renderView('blog/blogtable.html.twig', $returnedData['templateResult']),
@@ -79,6 +79,8 @@ class BlogController extends AbstractController
     /**
      * @Route("/searchDatabase/{page}", name="blogSearchDatabase" )
      *
+     * @param Request $request
+     * @param int|null $page
      * @return Response
      */
     public function searchDatabase(Request $request, ?int $page = 0): Response
