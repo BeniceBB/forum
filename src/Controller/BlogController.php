@@ -38,7 +38,7 @@ class BlogController extends AbstractController
     {
         $form = $this->createForm(SearchFormType::class);
         $filteredBlogs = $this->searchFilterManager->getBlogs(['type' => ['all'], 'orderBy' => 'id ASC']);
-        $totalFilteredBlogs = $this->searchFilterManager->totalFilteredBlogs(['type' => ['all']]);
+        $totalFilteredBlogs = $this->searchFilterManager->totalFilteredBlogs(['type' => ['all'], 'orderBy' => 'id ASC']);
 
         return $this->render('blog/list.html.twig', [
             'blogs' => $filteredBlogs,

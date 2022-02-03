@@ -99,8 +99,6 @@ class BlogListManager
     {
         $filteredBlogs = $this->getFilteredBlogs($blogs, $filters, $wordToSearch);
 
-//        $data['orderBy'] = 'id ASC';
-
         switch ($data['orderBy']) {
             case 'id ASC':
                 asort($filteredBlogs);
