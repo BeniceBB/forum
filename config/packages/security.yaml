@@ -37,6 +37,7 @@ security:
     access_control:
          - { path: ^/create, roles: IS_AUTHENTICATED_FULLY }
          - { path: ^/delete, roles: IS_AUTHENTICATED_FULLY }
+         - { path: ^/edit, roles: IS_AUTHENTICATED_FULLY }
 
 when@test:
     security:

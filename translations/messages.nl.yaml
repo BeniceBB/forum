@@ -1,6 +1,7 @@
 post.created: Bericht is aangemaakt
 post.deleted: Bericht is verwijderd
 post.create: Nieuw bericht
+post.edited: Bericht is gewijzigd
 
 table.title: Titel
 table.short_description: Korte omschrijving
@@ -35,6 +36,7 @@ form.register: Registreer
 form.search: Zoek
 
 link.delete: Verwijder
+link.edit: Wijzig
 link.back_to_overview: Terug naar overzicht
 link.register_new: Nog geen account? Klik hier om te registreren
 link.login: Al een account? Klik hier om in te loggen
