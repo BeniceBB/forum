@@ -12,9 +12,27 @@ label.name: Naam
 label.username: Gebruikersnaam
 label.password: Wachtwoord
 label.new_password: Kies een wachtwoord
+label.titles: Titels
+label.title: Titel
+label.all: Alle
+label.descriptions: Omschrijvingen
+label.post: Bericht
+label.authors: Auteurs
+label.author: Auteur
+label.amountFilter: Berichten per pagina
+label.search_in: Zoeken in
+label.orderBy: Sorteer
+label.date: Datum
+label.A-Z: A tot Z
+label.Z-A: Z tot A
+label.asc: Oudste eerst
+label.desc: Nieuwse eerst
+
+placeholder.search: Zoeken
 
 form.submit: Opslaan
 form.register: Registreer
+form.search: Zoek
 
 link.delete: Verwijder
 link.back_to_overview: Terug naar overzicht
@@ -36,3 +54,5 @@ registration.password_limit: Je wachtwoord moet minstens {{ limit }} karakters l
 title.welcome: Welkom!
 title.view: Bekijk
 title.new_post: Nieuw bericht
+
+from.amount: van

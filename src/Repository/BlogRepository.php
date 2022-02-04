@@ -18,4 +18,22 @@ class BlogRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Blog::class);
     }
+
+
+    public function findAllBlogsBySearchParam(array $data): array
+    {
+        $qb = $this->createQueryBuilder('b')
+            ->join('b.user', 'u');
+        foreach ($data['type'] as $type) {
+            if ($type === 'user') {
+                $qb->orWhere('u.username LIKE :search');
+            } else if ($type !== 'all') {
+                $qb->orWhere('b.' . $type . ' LIKE :search');
+            }
+        }
+        $qb->setParameter('search', '%' . $data['search'] . '%');
+        $qb->orderBy('b.'.$data['orderBy'][0], $data['orderBy'][1]);
+        $qb->getQuery();
+        return $qb->getQuery()->execute();
+    }
 }

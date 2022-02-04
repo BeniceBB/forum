@@ -12,9 +12,28 @@ label.name: Name
 label.username: Username
 label.password: Password
 label.new_password: Choose a password
+label.titles: Titles
+label.title: Title
+label.all: All
+label.descriptions: Descriptions
+label.description: Description
+label.post: Post
+label.authors: Authors
+label.author: Author
+label.amountFilter: Posts per page
+label.search_in: Search in
+label.orderBy: Sort
+label.date: Date
+label.A-Z: A to Z
+label.Z-A: Z to A
+label.asc: Oldest first
+label.desc: Newest first
+
+placeholder.search: Search
 
 form.submit: Submit
 form.register: Register
+form.search: Search
 
 link.delete: Delete
 link.back_to_overview: Back to overview
@@ -36,3 +55,5 @@ registration.password_limit: Your password should be at least {{ limit }} charac
 title.welcome: Welcome!
 title.view_post: View
 title.new_post: New post
+
+from.amount: from

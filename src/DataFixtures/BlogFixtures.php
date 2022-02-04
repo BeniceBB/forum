@@ -25,7 +25,19 @@ class BlogFixtures extends Fixture implements DependentFixtureInterface
             $blog->setUser($user);
             $manager->persist($blog);
         }
-
+        for ($i = 0; $i < 3; ++$i) {
+            $blog = new Blog();
+            $blog->setTitle('Testing Title');
+            $blog->setBody('Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              Proin sodales, arcu non commodo vulputate, neque lectus luctus metus,
+              ac hendrerit mi erat eu ante. Nullam blandit arcu erat,
+              vitae pretium neque suscipit vitae.
+              Pellentesque sit amet lacus in metus placerat posuere. Aliquam hendrerit risus elit, non commodo nulla cursus id.
+              Vivamus tristique felis leo, vitae laoreet sapien eleifend vitae. Etiam varius sollicitudin tincidunt');
+            $blog->setShortDescription('Test description');
+            $blog->setUser($user);
+            $manager->persist($blog);
+        }
         $manager->flush();
     }
 

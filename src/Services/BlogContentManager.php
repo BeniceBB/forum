@@ -7,7 +7,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class BlogContentManager
 {
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
     public function __construct(EntityManagerInterface $entityManager)
     {

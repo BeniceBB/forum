@@ -4,10 +4,10 @@ namespace App\Controller;
 
 use App\Entity\Blog;
 use App\Form\Type\BlogFormType;
-use App\Repository\BlogRepository;
+use App\Form\Type\SearchFormType;
 use App\Services\BlogContentManager;
+use App\Services\SearchFilterManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,32 +18,89 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BlogController extends AbstractController
 {
-    private $entityManager;
-    private $translator;
+    private EntityManagerInterface $entityManager;
+    private TranslatorInterface $translator;
+    private SearchFilterManager $searchFilterManager;
 
-    public function __construct(EntityManagerInterface $entityManager, TranslatorInterface $translator, private ManagerRegistry $doctrine)
+    public function __construct(EntityManagerInterface $entityManager, TranslatorInterface $translator, SearchFilterManager $searchFilterManager)
     {
         $this->entityManager = $entityManager;
         $this->translator = $translator;
+        $this->searchFilterManager = $searchFilterManager;
     }
 
     /**
      * @Route("/")
      *
-     * @param BlogRepository $blogRepository
-     *
      * @return Response
      */
-    public function index(BlogRepository $blogRepository): Response
+    public function index(): Response
     {
-        $em = $this->doctrine->getManager();
-        $repoBlogs = $em->getRepository(Blog::class);
-        $totalBlogs = $repoBlogs->createQueryBuilder('a')
-            ->select('count(a.id)')
-            ->getQuery()
-            ->getSingleScalarResult();
+        $form = $this->createForm(SearchFormType::class);
+        $filteredBlogs = $this->searchFilterManager->getBlogs(['type' => ['all'], 'orderBy' => 'id ASC']);
+        $totalFilteredBlogs = $this->searchFilterManager->totalFilteredBlogs(['type' => ['all'], 'orderBy' => 'id ASC']);
 
-        return $this->render('blog/list.html.twig', ['blogs' => $blogRepository->findAll(), 'post_amount' => $this->translator->trans('post.amount', ['amount' => $totalBlogs])]);
+        return $this->render('blog/list.html.twig', [
+            'blogs' => $filteredBlogs,
+            'postAmount' => $this->translator->trans('post.amount', ['amount' => count($filteredBlogs)]),
+            'totalFilteredBlogs' => $totalFilteredBlogs,
+            'searchForm' => $form->createView(),
+            'page' => 0,
+        ]);
+    }
+
+    /**
+     * @Route("/search/{page}", name="blogsearch" )
+     *
+     * @param Request $request
+     * @param int|null $page
+     * @return Response
+     */
+    public function search(Request $request, ?int $page = 0): Response
+    {
+        $form = $this->createForm(SearchFormType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            $filteredBlogs = $this->searchFilterManager->getBlogs($data, $page);
+            $returnedData = $this->searchFilterManager->getAllDataFilteredBlogs($data, $filteredBlogs, $page);
+
+            return $this->json([
+                'result' => $this->renderView('blog/blogtable.html.twig', $returnedData['templateResult']),
+                'page' => $returnedData['page'],
+                'numberOfBlogs' => $returnedData['numberOfBlogs'],
+                'numberOfBlogsPerPage' => $returnedData['numberOfBlogsPerPage'],
+            ]);
+        }
+        return $this->json('error', 503);
+    }
+
+    /**
+     * @Route("/searchDatabase/{page}", name="blogSearchDatabase" )
+     *
+     * @param Request $request
+     * @param int|null $page
+     * @return Response
+     */
+    public function searchDatabase(Request $request, ?int $page = 0): Response
+    {
+        $form = $this->createForm(SearchFormType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            $filteredBlogs = $this->searchFilterManager->getBlogsFromQueryTypeFilter($data, $page);
+            $returnedData = $this->searchFilterManager->getAllDataFilteredBlogs($data, $filteredBlogs, $page);
+
+            return $this->json([
+                'result' => $this->renderView('blog/blogtable.html.twig', $returnedData['templateResult']),
+                'page' => $returnedData['page'],
+                'numberOfBlogs' => $returnedData['numberOfBlogs'],
+                'numberOfBlogsPerPage' => $returnedData['numberOfBlogsPerPage'],
+            ]);
+        }
+        return $this->json('error', 503);
     }
 
     /**
@@ -57,25 +114,21 @@ class BlogController extends AbstractController
     {
         $user = $this->getUser();
 
-        if (!$this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY')) {
-            $blog = new Blog();
-            $form = $this->createForm(BlogFormType::class, $blog);
-            $form->handleRequest($request);
+        $blog = new Blog();
+        $form = $this->createForm(BlogFormType::class, $blog);
+        $form->handleRequest($request);
 
-            if ($form->isSubmitted() && $form->isValid()) {
-                $blog->setUser($user);
-                $this->entityManager->persist($blog);
-                $this->entityManager->flush();
-                $this->addFlash('success', $this->translator->trans('post.created'));
-                return $this->redirectToRoute('app_blog_index');
-            }
-
-            return $this->render('blog/create.html.twig', [
-                'form' => $form->createView(),
-            ]);
-        } else {
+        if ($form->isSubmitted() && $form->isValid()) {
+            $blog->setUser($user);
+            $this->entityManager->persist($blog);
+            $this->entityManager->flush();
+            $this->addFlash('success', $this->translator->trans('post.created'));
             return $this->redirectToRoute('app_blog_index');
         }
+
+        return $this->render('blog/create.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 
     /**
@@ -87,11 +140,10 @@ class BlogController extends AbstractController
      */
     public function deleteBlog(Blog $blog): RedirectResponse
     {
-        if (!$this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY')) {
-            $this->entityManager->remove($blog);
-            $this->entityManager->flush();
-            $this->addFlash('success', $this->translator->trans('post.deleted'));
-        }
+        $this->entityManager->remove($blog);
+        $this->entityManager->flush();
+        $this->addFlash('success', $this->translator->trans('post.deleted'));
+
         return $this->redirectToRoute('app_blog_index');
     }
 

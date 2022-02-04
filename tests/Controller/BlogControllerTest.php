@@ -68,12 +68,12 @@ class BlogControllerTest extends WebTestCase
         $form = $crawler->selectButton('Opslaan')->form();
         $form['blog_form[title]']->setValue('Test Title');
         $form['blog_form[body]']->setValue('testbody');
-        $form['blog_form[shortDescription]']->setValue('testshortDescription');
+        $form['blog_form[shortDescription]']->setValue('test Short Description');
 
         $client->submit($form);
         $client->followRedirect();
 
-        $this->assertStringContainsString('Test Title', $client->getResponse()->getContent());
+        $this->assertStringContainsString('5 berichten van 8', $client->getResponse()->getContent());
     }
 
     public function testDeleteLinkAuthenticatedEN(): void
@@ -102,5 +102,17 @@ class BlogControllerTest extends WebTestCase
         $client->clickLink('Verwijder');
         $client->followRedirect();
         $this->assertStringContainsString('Bericht is verwijderd', $client->getResponse()->getContent());
+    }
+
+    public function testSearchFromNoResults(): void
+    {
+        $client = static::createClient();
+        $crawler = $client->request('POST', '/search/0', [
+            'search_form' => [
+                'search' => 'zoek iets',
+                'postsPerPage' => 5,
+            ]
+        ]);
+        $this->assertStringContainsString('geen berichten', $client->getResponse()->getContent(), 'If this returns "error" -> disable csrf-protection in Framework.yaml');
     }
 }

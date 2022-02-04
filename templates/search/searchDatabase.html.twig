@@ -1,0 +1,137 @@
+<div id="search">
+    {{ form_start(searchForm, {'attr': {'id': 'searchForm'}}) }}
+    <div class="form-group">
+        {{ form_widget(searchForm.search) }}
+    </div>
+    <div class="form-group">
+        <label>{% trans %}label.search_in{% endtrans %}:</label>
+        {{ form_widget(searchForm.type) }}
+    </div>
+    <div class="form-group">
+        <label>{% trans %}label.amountFilter{% endtrans %}</label>
+        {{ form_widget(searchForm.postsPerPage) }}
+    </div>
+    <div class="form-group">
+        <label>{% trans %}label.orderBy{% endtrans %}</label>
+        {{ form_widget(searchForm.orderBy) }}
+    </div>
+
+    <button type="submit" class="btn btn-dark">{% trans %}form.search{% endtrans %}</button>
+    {{ form_end(searchForm) }}
+</div>
+
+<div class="col-lg-2 right">
+    <a href="#" id="prev" data-page="" class="hidden">prev</a>
+    <a href="#" id="next" data-page="1" class="right">next</a>
+</div>
+
+
+<style>
+    .hidden {
+        display: none;
+    }
+
+    .right {
+        float: right;
+    }
+
+    #prev {
+        margin-left: 70px;
+    }
+</style>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    function showButtons(condition, buttonId) {
+        if (condition) {
+            $(buttonId).show();
+        }
+    }
+
+    function hideButtons(condition, buttonId) {
+        if (condition) {
+            $(buttonId).hide();
+        }
+    }
+
+    function setPages(firstValue, pageValue) {
+        if (firstValue < 0) {
+            firstValue = 0;
+        }
+
+        $('#prev').data('page', firstValue);
+        $('#next').data('page', pageValue + 1);
+    }
+
+    $.ajaxSetup({
+        type: 'POST',
+        url: '/searchDatabase',
+        processData: false,
+        contentType: false,
+    });
+
+    $(document).ready(function () {
+        $('#searchForm').submit(function (e) {
+            e.preventDefault();
+
+            var form = new FormData(this);
+
+            $.ajax({
+                data: form,
+            }).done(function (data) {
+                data.page = 0;
+                $('#blogtable').html(data.result);
+                hideButtons(data.numberOfBlogs < data.numberOfBlogsPerPage, '#next');
+                showButtons(data.numberOfBlogs >= data.numberOfBlogsPerPage, '#next');
+                $('#prev').hide();
+                $('#next').data('page', data.page + 1);
+            }).fail(function (data) {
+                $('#blogtable').html(data.error);
+            });
+        });
+
+        $('#prev').click(function (e) {
+            e.preventDefault();
+
+            var form = new FormData($('#searchForm')[0]);
+            var page = $('#prev').data('page');
+
+            $.ajax({
+                url: '/searchDatabase/' + page,
+                data: form,
+            }).done(function (data) {
+                $('#blogtable').html(data.result);
+                showButtons(data.numberOfBlogs > 0, '#prev');
+                hideButtons(data.page === 0, '#prev');
+                showButtons(1 === 1, '#next');
+
+                let prevPage = data.page - 1;
+                setPages(prevPage, data.page);
+            }).fail(function (data) {
+                $('#blogtable').html(data.error);
+            });
+        });
+
+        $('#next').click(function (e) {
+            e.preventDefault();
+
+            var form = new FormData($('#searchForm')[0]);
+            var page = $('#next').data('page');
+
+            $.ajax({
+                url: '/searchDatabase/' + page,
+                data: form,
+            }).done(function (data) {
+                $('#blogtable').html(data.result);
+                hideButtons(data.numberOfBlogs < data.numberOfBlogsPerPage, '#next');
+                showButtons(data.numberOfBlogs > data.numberOfBlogsPerPage, '#next');
+                showButtons(1 === 1, '#prev');
+                let prevPage = data.page - 1;
+                setPages(prevPage, data.page);
+            }).fail(function (data) {
+                $('#blogtable').html(data.error);
+            });
+        });
+    });
+</script>
+
