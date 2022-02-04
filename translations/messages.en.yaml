@@ -1,6 +1,7 @@
 post.created: Post is created
 post.deleted: Post is deleted
 post.create: New post
+post.edited: Post is edited
 
 table.title: Title
 table.short_description: Short description
@@ -36,6 +37,7 @@ form.register: Register
 form.search: Search
 
 link.delete: Delete
+link.edit: Edit
 link.back_to_overview: Back to overview
 link.register_new: No account? Click here to register
 link.login: Already have an account? Click here to login

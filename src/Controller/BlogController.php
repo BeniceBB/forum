@@ -21,12 +21,14 @@ class BlogController extends AbstractController
     private EntityManagerInterface $entityManager;
     private TranslatorInterface $translator;
     private SearchFilterManager $searchFilterManager;
+    private BlogContentManager $blogContentManager;
 
-    public function __construct(EntityManagerInterface $entityManager, TranslatorInterface $translator, SearchFilterManager $searchFilterManager)
+    public function __construct(EntityManagerInterface $entityManager, TranslatorInterface $translator, SearchFilterManager $searchFilterManager, BlogContentManager $blogContentManager)
     {
         $this->entityManager = $entityManager;
         $this->translator = $translator;
         $this->searchFilterManager = $searchFilterManager;
+        $this->blogContentManager = $blogContentManager;
     }
 
     /**
@@ -39,6 +41,10 @@ class BlogController extends AbstractController
         $form = $this->createForm(SearchFormType::class);
         $filteredBlogs = $this->searchFilterManager->getBlogs(['type' => ['all'], 'orderBy' => 'id ASC']);
         $totalFilteredBlogs = $this->searchFilterManager->totalFilteredBlogs(['type' => ['all'], 'orderBy' => 'id ASC']);
+        $userAuthenticated = '';
+        if(!$this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY')) {
+            $userAuthenticated = $this->getUser();
+        }
 
         return $this->render('blog/list.html.twig', [
             'blogs' => $filteredBlogs,
@@ -46,6 +52,7 @@ class BlogController extends AbstractController
             'totalFilteredBlogs' => $totalFilteredBlogs,
             'searchForm' => $form->createView(),
             'page' => 0,
+            'userAuthenticated' => $userAuthenticated,
         ]);
     }
 
@@ -58,6 +65,10 @@ class BlogController extends AbstractController
      */
     public function search(Request $request, ?int $page = 0): Response
     {
+        $userAuthenticated = '';
+        if(!$this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY')) {
+            $userAuthenticated = $this->getUser();
+        }
         $form = $this->createForm(SearchFormType::class);
         $form->handleRequest($request);
 
@@ -132,6 +143,34 @@ class BlogController extends AbstractController
     }
 
     /**
+     * @Route("/edit/{id}", name="app_blog_edit")
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+
+    public function editBlog(Request $request, int $id): Response
+    {
+        $blog = $this->blogContentManager->getBlogContent($id);
+        $form = $this->createForm(BlogFormType::class, $blog);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->entityManager->persist($blog);
+            $this->entityManager->flush();
+            $this->addFlash('success', $this->translator->trans('post.edited'));
+            return $this->redirectToRoute('app_blog_index');
+        }
+
+        return $this->render('blog/create.html.twig', [
+            'form' => $form->createView(),
+            'author' => $blog->getUser(),
+            'userAuthenticated' => $this->getUser(),
+        ]);
+    }
+
+    /**
      * @Route("/delete/{id}", name="app_blog_delete")
      *
      * @param Blog $blog
@@ -152,8 +191,8 @@ class BlogController extends AbstractController
      *
      * @ParamConverter("blog", class="App:Blog")
      */
-    public function viewBlog(BlogContentManager $blogContentManager, int $id): Response
+    public function viewBlog(int $id): Response
     {
-        return $this->render('blog/view.html.twig', ['blog' => $blogContentManager->getBlogContent($id)]);
+        return $this->render('blog/view.html.twig', ['blog' => $this->blogContentManager->getBlogContent($id)]);
     }
 }
