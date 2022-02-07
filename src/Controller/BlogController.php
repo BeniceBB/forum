@@ -41,10 +41,6 @@ class BlogController extends AbstractController
         $form = $this->createForm(SearchFormType::class);
         $filteredBlogs = $this->searchFilterManager->getBlogs(['type' => ['all'], 'orderBy' => 'id ASC']);
         $totalFilteredBlogs = $this->searchFilterManager->totalFilteredBlogs(['type' => ['all'], 'orderBy' => 'id ASC']);
-        $userAuthenticated = '';
-        if(!$this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY')) {
-            $userAuthenticated = $this->getUser();
-        }
 
         return $this->render('blog/list.html.twig', [
             'blogs' => $filteredBlogs,
@@ -52,7 +48,6 @@ class BlogController extends AbstractController
             'totalFilteredBlogs' => $totalFilteredBlogs,
             'searchForm' => $form->createView(),
             'page' => 0,
-            'userAuthenticated' => $userAuthenticated,
         ]);
     }
 
@@ -65,10 +60,6 @@ class BlogController extends AbstractController
      */
     public function search(Request $request, ?int $page = 0): Response
     {
-        $userAuthenticated = '';
-        if(!$this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY')) {
-            $userAuthenticated = $this->getUser();
-        }
         $form = $this->createForm(SearchFormType::class);
         $form->handleRequest($request);
 

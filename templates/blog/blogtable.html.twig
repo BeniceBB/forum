@@ -12,7 +12,6 @@
     </tr>
     </thead>
     <tbody>
-    {{ userAuthenticated.username }}
     {% for blog in blogs %}
         <tr>
             <td><a href="{{ path('app_blog_viewblog', {id: blog.id}) }}"
@@ -25,9 +24,9 @@
             </td>
             {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                 <td>
-{#                    {% if blog.user.username is same as() %}#}
+                    {% if blog.user is same as(app.user) %}
                     <a href="{{ path('app_blog_edit', {id: blog.id}) }}">{% trans %} link.edit {% endtrans %}</a>
-{#                    {% endif %}#}
+                    {% endif %}
                     <a href="{{ path('app_blog_delete', {id: blog.id}) }}"
                        onclick="return confirm('{% trans %}delete.confirm{% endtrans %}');">{% trans %} link.delete {% endtrans %}</a>
                 </td>
