@@ -154,11 +154,14 @@ class BlogController extends AbstractController
             return $this->redirectToRoute('app_blog_index');
         }
 
-        return $this->render('blog/create.html.twig', [
-            'form' => $form->createView(),
-            'author' => $blog->getUser(),
-            'userAuthenticated' => $this->getUser(),
-        ]);
+        if($blog->getUser() === $this->getUser()) {
+            return $this->render('blog/create.html.twig', [
+                'form' => $form->createView(),
+                'author' => $blog->getUser(),
+                'userAuthenticated' => $this->getUser(),
+            ]);
+        }
+        return $this->redirectToRoute('app_blog_index');
     }
 
     /**
